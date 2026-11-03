@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bono Etiquetas — Noviembre 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --canvas:#f6f3ee;--surface:#ffffff;--surface2:#faf8f4;--sunk:#efeae2;
+  --ink:#1c1916;--ink2:#4d463f;--mut:#7a7168;--line:#e6e0d6;--line2:#d4cbbe;
+  --wine:#7a1f3d;--wine-ink:#5e1730;--wine-soft:#f6e6ec;--wine-mid:#b23a62;
+  --ok:#2a6f47;--ok-soft:#e1f1e7;--warn:#9a5b00;--warn-soft:#fff0d6;--gold:#c99a2e;
+  --fr:#b3400f;--fr-soft:#fbe6dc;--ez:#1f4fc2;--ez-soft:#e1e8fb;--el:#0e6b64;--el-soft:#d8efec;--libre:#5f5a55;--libre-soft:#ebe7e1;
+  --r-s:8px;--r:12px;--r-l:16px;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+  --focus:0 0 0 3px rgba(122,31,61,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--canvas);color:var(--ink);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:var(--ink)}
+button{cursor:pointer}
+:focus-visible{outline:none;box-shadow:var(--focus)}
+.num{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+
+/* ---------- header ---------- */
+.top{background:var(--wine);color:#fff;position:sticky;top:0;z-index:30}
+.top .in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{height:46px;width:auto;display:block}
+.sep{width:1px;height:30px;background:rgba(255,255,255,.3)}
+.brand h1{margin:0;font-size:16px;font-weight:700;letter-spacing:.1px}
+.brand span{font-size:13px;opacity:.78}
+.seg{display:inline-flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:#fff;padding:7px 14px;border-radius:999px;font-weight:600;font-size:13px;min-height:34px;opacity:.85}
+.seg button:hover{opacity:1;background:rgba(255,255,255,.1)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--wine);opacity:1}
+.seg button:focus-visible{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+
+/* ---------- hero ---------- */
+main{max-width:1180px;margin:0 auto;padding:var(--s5) 16px 72px}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--s4);margin-bottom:var(--s5)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:var(--s5)}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--mut)}
+.hero .big{font-family:Fraunces,Georgia,serif;font-size:56px;line-height:1;font-weight:700;color:var(--wine);letter-spacing:-1px;margin:6px 0 4px}
+.hero .big small{font-family:Inter,sans-serif;font-size:14px;font-weight:600;color:var(--ink2);letter-spacing:0;margin-left:8px}
+.track{height:14px;background:var(--sunk);border-radius:999px;overflow:hidden;display:flex;margin:14px 0 10px}
+.track i{display:block;height:100%}
+.track .done{background:var(--wine)}
+.track .plan{background:var(--wine-mid);opacity:.55}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:var(--s3) var(--s4)}
+.fact .l{font-size:11.5px;color:var(--mut);font-weight:600}
+.fact .v{font-size:17px;font-weight:700;margin-top:2px}
+.fact .v small{font-size:12px;color:var(--mut);font-weight:500}
+.next{background:linear-gradient(180deg,#fff 0%,var(--surface2) 100%);display:flex;flex-direction:column;gap:10px}
+.next .nm{font-size:17px;font-weight:700;line-height:1.3}
+.next .why{font-size:13px;color:var(--ink2)}
+.next .why b{color:var(--ink)}
+.alt{border-top:1px solid var(--line);padding-top:10px;margin-top:4px}
+.alt-i{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:3px 0}
+.alt-n{min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2)}
+.alt-m{color:var(--mut);white-space:nowrap}
+.next .cta{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line2);background:#fff;border-radius:var(--r-s);padding:8px 14px;font-weight:600;font-size:13px;min-height:36px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--wine);border-color:var(--wine);color:#fff}
+.btn.primary:hover{background:var(--wine-ink)}
+.btn.sm{padding:5px 10px;min-height:30px;font-size:12.5px}
+.btn[aria-pressed="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--wine)}
+.btn.ghost:hover{background:var(--wine-soft)}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:2px;background:var(--sunk);padding:3px;border-radius:999px;width:max-content;max-width:100%;overflow-x:auto;margin-bottom:var(--s4)}
+.tabs button{border:0;background:transparent;padding:8px 16px;border-radius:999px;font-weight:600;color:var(--ink2);white-space:nowrap;min-height:36px}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--wine);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ---------- toolbar ---------- */
+.tool{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.tool .search{flex:1 1 240px;position:relative}
+.tool .search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--line2);border-radius:var(--r-s);background:#fff;min-height:38px}
+.tool .search svg{position:absolute;left:11px;top:11px;width:16px;height:16px;color:var(--mut)}
+.sel{position:relative;display:inline-flex}
+.sel select{appearance:none;-webkit-appearance:none;padding:8px 30px 8px 12px;border:1px solid var(--line2);border-radius:var(--r-s);background:#fff;min-height:38px;font-weight:500;max-width:230px}
+.sel.on select{border-color:var(--wine);background:var(--wine-soft);color:var(--wine-ink);font-weight:600}
+.sel::after{content:"";position:absolute;right:11px;top:15px;width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);pointer-events:none;color:var(--mut)}
+.toggle{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line2);border-radius:var(--r-s);background:#fff;min-height:38px;font-weight:500;cursor:pointer;user-select:none}
+.toggle input{width:16px;height:16px;accent-color:var(--wine);margin:0}
+.toggle.on{border-color:var(--wine);background:var(--wine-soft);color:var(--wine-ink);font-weight:600}
+.bar2{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.count{font-size:13px;color:var(--mut)}
+.count b{color:var(--ink)}
+.sortseg{display:inline-flex;gap:2px;background:var(--sunk);padding:3px;border-radius:999px;overflow-x:auto;max-width:100%}
+.sortseg button{border:0;background:transparent;padding:6px 12px;border-radius:999px;font-weight:600;font-size:12.5px;color:var(--ink2);white-space:nowrap;min-height:30px}
+.sortseg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ---------- label rows ---------- */
+.list{display:flex;flex-direction:column;gap:8px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:border-color .15s}
+.row:hover{border-color:var(--line2)}
+.row.open{border-color:var(--wine-mid)}
+.row .hd{width:100%;text-align:left;border:0;background:transparent;display:grid;grid-template-columns:30px minmax(0,1fr) 150px 190px 24px;gap:14px;align-items:center;padding:12px 14px}
+.row .hd:hover{background:var(--surface2)}
+.rk{font-weight:700;color:var(--mut);font-size:13px;text-align:center}
+.ttl{font-weight:600;font-size:14.5px;line-height:1.3}
+.meta{font-size:12px;color:var(--mut);margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.meta .price{color:var(--ink2);font-weight:600}
+.prg{display:flex;align-items:center;gap:10px;margin-top:8px}
+.prg .track{height:6px;margin:0;flex:0 0 160px;max-width:160px}
+.prg .t{font-size:12.5px;color:var(--ink2)}
+.prg .t b{color:var(--ink)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:600;line-height:1.5;white-space:nowrap}
+.chip.near{background:var(--warn-soft);color:var(--warn)}
+.chip.done{background:var(--ok-soft);color:var(--ok)}
+.chip.var{background:var(--sunk);color:var(--ink2)}
+.chip.vip{background:#fbefd0;color:#7a4e00}
+.chip.g-Entrada{background:#e8efe3;color:#2f5c27}.chip.g-Media{background:#e3eaf6;color:#274f8e}.chip.g-Alta{background:#f1e4f0;color:#6e2a66}.chip.g-Premium{background:#fbefd0;color:#7a4e00}.chip.g-Ícono{background:#1c1916;color:#f2d58a}
+.chip.fr{background:var(--fr-soft);color:var(--fr)}.chip.ez{background:var(--ez-soft);color:var(--ez)}.chip.el{background:var(--el-soft);color:var(--el)}.chip.libre{background:var(--libre-soft);color:var(--libre)}
+.money{text-align:right}
+.money .m{font-size:17px;font-weight:800;letter-spacing:-.2px}
+.money .s{font-size:11.5px;color:var(--mut);margin-top:1px}
+.leads{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end}
+.leads .chip{font-size:11px}
+.chev{width:20px;height:20px;color:var(--mut);transition:transform .15s}
+.row.open .chev{transform:rotate(180deg)}
+
+/* ---------- row body ---------- */
+.bd{border-top:1px solid var(--line);background:var(--surface2);padding:14px}
+.bd h4{margin:0 0 8px;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--mut);font-weight:700}
+.sold{display:flex;gap:10px;flex-wrap:wrap;font-size:12.5px;margin-bottom:14px;color:var(--ink2)}
+.tw{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:var(--r-s)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:560px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);padding:8px 10px;border-bottom:1px solid var(--line);font-weight:700;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid #f0ece5;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+.tel{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink2);white-space:nowrap}
+tr.ct td{color:var(--mut)}
+tr.ct td:first-child{text-decoration:line-through}
+details{margin-top:12px}
+summary{cursor:pointer;color:var(--wine);font-weight:600;font-size:13px;list-style:none;display:inline-flex;align-items:center;gap:6px;padding:6px 0}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(-45deg);transition:transform .15s}
+details[open] summary::before{transform:rotate(45deg)}
+.empty{padding:36px 20px;text-align:center;color:var(--mut);background:var(--surface);border:1px dashed var(--line2);border-radius:var(--r)}
+.empty b{display:block;color:var(--ink);margin-bottom:4px;font-size:15px}
+.note{font-size:12.5px;color:var(--mut);margin:0 0 12px}
+.note b{color:var(--ink2)}
+
+/* ---------- simulador ---------- */
+.sim{display:grid;grid-template-columns:1fr;gap:var(--s4);margin-bottom:var(--s4)}
+.sim .panel{padding:20px 22px}
+.sim .hd2{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.sim .n{font-family:Fraunces,Georgia,serif;font-size:40px;font-weight:700;color:var(--wine);line-height:1}
+.sim .n small{font-family:Inter,sans-serif;font-size:14px;color:var(--ink2);font-weight:600;margin-left:6px}
+input[type=range]{width:100%;accent-color:var(--wine);margin:14px 0 6px;height:28px}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--mut);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* ---------- cliente ---------- */
+.cli{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:10px}
+.cli h3{margin:0 0 2px;font-size:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cli .sub{font-size:12.5px;color:var(--mut);margin-bottom:10px}
+
+
+.st{display:inline-flex;align-items:center;gap:6px;font-weight:600;text-transform:none;letter-spacing:0;font-size:12px}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}.dot.ok{background:var(--ok)}.dot.off{background:#b45309}.dot.busy{background:var(--mut);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.lnk{border:0;background:none;color:var(--wine);font-weight:700;padding:0 2px;cursor:pointer;text-decoration:underline;font-size:12px}
+footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:var(--mut)}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .row .hd{grid-template-columns:26px minmax(0,1fr) 20px;grid-template-areas:"rk ttl chev" "rk met chev";row-gap:8px}
+  .row .hd>.rk{grid-area:rk}.row .hd>.main{grid-area:ttl}.row .hd>.chev{grid-area:chev}
+  .row .hd>.met{grid-area:met;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+  .money{text-align:left}
+  .leads{justify-content:flex-start}
+}
+@media (min-width:901px){
+  .row .hd>.met{display:contents}
+}
+@media (max-width:560px){
+  .tool .sel{flex:1 1 45%}.tool .sel select{width:100%;max-width:none}.tool .toggle{flex:1 1 100%}
+  .facts{grid-template-columns:1fr 1fr}
+  .hero .big{font-size:44px}
+  .facts{grid-template-columns:1fr 1fr}
+  .panel{padding:18px}
+  .top .in{padding:8px 12px}
+  .logo{height:38px}.sep{height:24px}
+  .seg button{padding:7px 10px;font-size:12.5px}
+  .prg .track{flex-basis:110px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="in">
+    <div class="brand"><img src="logo-white.png" alt="Azari Wines" class="logo"><span class="sep"></span><h1>Bono Etiquetas</h1><span id="mesLbl"></span></div>
+    <div class="seg" id="vendBtns" role="group" aria-label="Ver como"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero"></section>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-t="prio">Qué vender primero</button>
+    <button role="tab" data-t="plan">Simulador</button>
+    <button role="tab" data-t="all">Todas las etiquetas</button>
+    <button role="tab" data-t="cli">Buscar cliente</button>
+  </div>
+  <section id="v-prio" role="tabpanel"></section>
+  <section id="v-plan" role="tabpanel" hidden></section>
+  <section id="v-all" role="tabpanel" hidden></section>
+  <section id="v-cli" role="tabpanel" hidden></section>
+</main>
+<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Ventas por vendedor y historial de compradores (CRM Airtable): foto del 03/11/2026 12:50. Catálogo de precios y bodegas: STOCK 2026 (790 etiquetas) al 03/11/2026. Lo marcado como “contactado” se guarda sólo en este dispositivo.</footer>
+
+<script src="catalog.js"></script>
+<script src="data.js"></script>
+<script>
+const D = window.DATA, V = D.vend, C = D.clients;
+const VC = {Franco:'fr',Ezequiel:'ez',Elias:'el',Libre:'libre'};
+const money = n => '$' + Math.round(n).toLocaleString('es-AR');
+const moneyK = n => n>=1000 ? '$'+(n/1000).toLocaleString('es-AR',{maximumFractionDigits:n>=100000?0:1})+'k' : money(n);
+const pct = n => (n*100).toFixed(1).replace('.',',') + '%';
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fdate = s => s ? s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(2,4) : '—';
+const GAMAS=['Entrada','Media','Alta','Premium','Ícono'];
+const GAMA_RANGE={Entrada:'< $15k',Media:'$15–30k',Alta:'$30–60k',Premium:'$60–150k','Ícono':'> $150k'};
+const CHEV='<svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8l5 5 5-5"/></svg>';
+const SEARCH='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>';
+
+const state = { vend:'Todos', tab:'prio', sort:'eff', q:'', bod:'', gama:'', var:'', onlyMine:false, maxRest:0, open:new Set(), caps:25, allq:'', allsort:'rest', allShowDone:false, cliq:'' };
+try{ const s=localStorage.getItem('bono_vend'); if(s) state.vend=s; }catch(e){}
+let contacted = {};
+try{ contacted = JSON.parse(localStorage.getItem('bono_contact')||'{}'); }catch(e){}
+const saveContact = () => { try{ localStorage.setItem('bono_contact',JSON.stringify(contacted)); }catch(e){} };
+
+// ---- catálogo (STOCK 2026): bodega, precio, gama, varietal para cualquier etiqueta, esté o no en el bono
+const CAT = window.CATALOG||{};
+const normKey = s => String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+function applyCatalog(l){ const c=CAT[normKey(l.name)]; if(c){ l.bod=c[0]; l.price=c[1]; l.gama=c[2]; l.var=c[3]; } else { l.bod=l.bod||'Sin catálogo'; l.price=l.price||null; l.gama=l.gama||'Sin precio'; l.var=l.var&&l.var.length?l.var:['Otro']; } return l; }
+// ---- fuente en vivo (CSV publicado del Dashboard)
+const LIVE_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZsICWrpR9qQIguPgS-gZbdrqT7PuB1ADL6TC1Gb1OpW6fE0sXpv32wDIQKW1The_4kLpUBf0qEepa/pub?gid=1186328547&single=true&output=csv';
+const LIVE_EVERY_MIN = 5;
+let live = { ok:false, at:null, err:null, loading:false };
+const EMB = {}; D.labels.forEach(l=>{ EMB[normKey(l.name)] = l; });
+
+function parseCSV(t){ const rows=[]; let row=[], f='', q=false; for(let i=0;i<t.length;i++){ const c=t[i]; if(q){ if(c==='"'){ if(t[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; } else { if(c==='"') q=true; else if(c===','){row.push(f);f='';} else if(c==='\n'){row.push(f);rows.push(row);row=[];f='';} else if(c!=='\r') f+=c; } } if(f.length||row.length){row.push(f);rows.push(row);} return rows; }
+function num(s){ s=String(s||'').replace(/[$\s]/g,''); if(!s) return 0; if(/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)||/^-?\d+,\d+$/.test(s)) s=s.replace(/\./g,'').replace(',','.'); return parseFloat(s)||0; }
+function labelsFromCSV(text){
+  const rows=parseCSV(text); let i=rows.findIndex(r=>/objetivo/i.test(r[0]||'')&&/objetivo/i.test(r[1]||'')); if(i<0) throw new Error('No encontré la tabla de etiquetas en el CSV');
+  const out=[]; for(const r of rows.slice(i+1)){ const name=(r[0]||'').trim(); if(!name) continue; const obj=Math.round(num(r[1])), sold=Math.round(num(r[2])), sim=num(r[5]); if(obj<=0) continue;
+    const e=EMB[normKey(name)]; out.push({ id:out.length, name, obj, sold, sim, byv:e?e.byv:{}, buyers:e?e.buyers:[], bod:e?e.bod:'', price:e?e.price:null, gama:e?e.gama:'', var:e?e.var:[] }); }
+  if(out.length<20) throw new Error('El CSV vino casi vacío ('+out.length+' filas)');
+  return out;
+}
+
+// ---- derive
+let L=[], TOTAL_SIM=0, DONE_SIM=0, byClient={};
+function setLabels(raw){
+  L = raw.map((l,i)=>{ applyCatalog(l); const rest=Math.max(0,l.obj-l.sold), done=l.sold>=l.obj; return Object.assign({},l,{id:i,rest,done,eff:done?0:l.sim/rest}); });
+  TOTAL_SIM = L.reduce((a,l)=>a+l.sim,0); DONE_SIM = L.filter(l=>l.done).reduce((a,l)=>a+l.sim,0);
+  L.forEach(l=>{ const w={Franco:[],Ezequiel:[],Elias:[],Libre:[]}; l.buyers.forEach(b=>{const c=C[b[0]]; if(!c||b[3]) return; (w[c.v]||w.Libre).push(b);}); l.warm=w; });
+  byClient={}; L.forEach(l=>l.buyers.forEach(b=>{(byClient[b[0]]=byClient[b[0]]||[]).push([l,b]);}));
+  state.open=new Set();
+}
+setLabels(D.labels);
+async function refreshLive(manual){
+  if(live.loading) return; live.loading=true; renderStatus();
+  try{
+    const r=await fetch(LIVE_CSV+'&t='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
+    const raw=labelsFromCSV(await r.text()); setLabels(raw); live={ok:true,at:new Date(),err:null,loading:false}; renderAll();
+  }catch(e){ live.loading=false; live.err=e.message||String(e); if(!live.ok) live.ok=false; renderStatus(); }
+}
+function statusHTML(){
+  if(live.loading) return '<span class="st"><i class="dot busy"></i>Actualizando…</span>';
+  if(live.ok){ const m=Math.round((Date.now()-live.at)/60000); return `<span class="st"><i class="dot ok"></i>En vivo · ${m<1?'recién':'hace '+m+' min'} <button class="lnk" id="refresh">Refrescar</button></span>`; }
+  return `<span class="st" title="${esc(live.err||'')}"><i class="dot off"></i>Datos del 03/11 (sin conexión al Sheet) <button class="lnk" id="refresh">Reintentar</button></span>`;
+}
+function renderStatus(){ const s=document.getElementById('status'); if(!s) return; s.innerHTML=statusHTML(); const b=s.querySelector('#refresh'); if(b) b.onclick=()=>refreshLive(true); }
+const myLeads = l => state.vend==='Todos' ? l.buyers.filter(b=>!b[3]).length : l.warm[state.vend].length;
+const freeLeads = l => l.warm.Libre.length;
+
+function pendingSorted(){
+  let arr = L.filter(l=>!l.done);
+  const q = state.q.trim().toLowerCase();
+  if(q) arr = arr.filter(l=>l.name.toLowerCase().includes(q)||l.bod.toLowerCase().includes(q)||l.var.join(' ').toLowerCase().includes(q));
+  if(state.bod) arr = arr.filter(l=>l.bod===state.bod);
+  if(state.gama) arr = arr.filter(l=>l.gama===state.gama);
+  if(state.var) arr = arr.filter(l=>l.var.includes(state.var));
+  if(state.maxRest) arr = arr.filter(l=>l.rest<=state.maxRest);
+  if(state.onlyMine) arr = arr.filter(l=>myLeads(l)>0);
+  const s=state.sort;
+  arr.sort((a,b)=> s==='eff' ? (b.eff-a.eff || a.rest-b.rest)
+    : s==='rest' ? (a.rest-b.rest || b.eff-a.eff)
+    : s==='sim' ? (b.sim-a.sim)
+    : s==='leads' ? (myLeads(b)-myLeads(a) || b.eff-a.eff)
+    : a.name.localeCompare(b.name));
+  return arr;
+}
+
+// ---- header
+function renderVend(){
+  const el=document.getElementById('vendBtns');
+  el.innerHTML=['Todos',...V].map(v=>`<button aria-pressed="${state.vend===v}" data-v="${v}">${v==='Todos'?'Equipo':v}</button>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.onclick=()=>{state.vend=b.dataset.v; try{localStorage.setItem('bono_vend',state.vend)}catch(e){}; renderAll();});
+}
+
+// ---- hero
+function renderHero(){
+  const doneN=L.filter(l=>l.done).length, one=L.filter(l=>!l.done&&l.rest===1).length, two=L.filter(l=>!l.done&&l.rest<=2).length;
+  const mine = state.vend!=='Todos';
+  const u = mine ? L.reduce((a,l)=>a+(l.byv[state.vend]||0),0) : L.reduce((a,l)=>a+l.sold,0);
+  const leads = L.filter(l=>!l.done).reduce((a,l)=>a+myLeads(l),0);
+  // next best: pending, has leads for vendor if vendor, best eff
+  let pool = L.filter(l=>!l.done); if(mine) pool = pool.filter(l=>l.warm[state.vend].length>0);
+  pool.sort((a,b)=>b.eff-a.eff||a.rest-b.rest);
+  const nb = pool[0];
+  document.getElementById('hero').innerHTML = `
+  <div class="panel">
+    <div class="eyebrow" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><span>Avance del bono grupal · ${esc(D.mes)}</span><span id="status">${statusHTML()}</span></div>
+    <div class="big num">${pct(DONE_SIM/TOTAL_SIM)}<small>del bono posible</small></div>
+    <div class="track" role="img" aria-label="${pct(DONE_SIM/TOTAL_SIM)} cumplido"><i class="done" style="width:${DONE_SIM/TOTAL_SIM*100}%"></i></div>
+    <div class="facts num">
+      <div class="fact"><div class="l">Generado hasta hoy</div><div class="v">${money(DONE_SIM)} <small>· ${money(DONE_SIM/3)} c/u</small></div></div>
+      <div class="fact"><div class="l">Si se completa todo</div><div class="v">${money(TOTAL_SIM)} <small>· ${money(TOTAL_SIM/3)} c/u</small></div></div>
+      <div class="fact"><div class="l">Etiquetas completadas</div><div class="v">${doneN} <small>de ${L.length} · ${one} a 1 caja, ${two} a ≤2</small></div></div>
+      ${mine?`<div class="fact"><div class="l">Cajas de ${state.vend} en etiquetas con objetivo</div><div class="v">${u}</div></div>
+      <div class="fact"><div class="l">Clientes calientes de ${state.vend}</div><div class="v">${leads} <small>ya compraron etiquetas pendientes</small></div></div>`:''}
+    </div>
+  </div>
+  <div class="panel next">
+    <div class="eyebrow">Próxima mejor jugada ${mine?'para '+state.vend:'del equipo'}</div>
+    ${nb?`<div class="nm">${esc(nb.name)}</div>
+    <div class="why">Falta <b>${nb.rest} ${nb.rest===1?'caja':'cajas'}</b> para desbloquear <b>${money(nb.sim)}</b> (${money(nb.sim/3)} c/u) — <b>${money(nb.eff)}</b> por caja. ${mine?`Tenés <b>${nb.warm[state.vend].length}</b> ${nb.warm[state.vend].length===1?'cliente que ya la compró':'clientes que ya la compraron'}`:`Hay <b>${nb.buyers.filter(b=>!b[3]).length}</b> ${nb.buyers.filter(b=>!b[3]).length===1?'cliente que ya la compró':'clientes que ya la compraron'}`}${freeLeads(nb)?` y ${freeLeads(nb)} ${freeLeads(nb)===1?'libre':'libres'}`:''}. Botella: ${nb.price?money(nb.price):'s/precio'}.</div>
+    ${pool.length>1?`<div class="alt"><div class="eyebrow" style="margin-bottom:6px">Después</div>${pool.slice(1,4).map(x=>`<div class="alt-i num"><span class="alt-n">${esc(x.name)}</span><span class="alt-m">${money(x.eff)}/caja · faltan ${x.rest}</span></div>`).join('')}</div>`:''}
+    <div class="cta"><button class="btn primary" id="goNext">Ver a quién ofrecerla</button><button class="btn" id="goPlan">Armar plan</button></div>`
+    :`<div class="nm">Sin etiquetas pendientes con clientes calientes</div><div class="why">Probá la vista Equipo o el simulador.</div>`}
+  </div>`;
+  const g=document.getElementById('goNext'); if(g) g.onclick=()=>{state.tab='prio'; state.open.add(nb.id); state.sort='eff'; state.q=''; state.bod=''; state.gama=''; state.var=''; state.maxRest=0; state.onlyMine=mine; renderAll(); setTimeout(()=>{const r=document.getElementById('row-'+nb.id); if(r) r.scrollIntoView({behavior:'smooth',block:'start'});},50);};
+  const p=document.getElementById('goPlan'); if(p) p.onclick=()=>{state.tab='plan'; renderAll();};
+}
+
+// ---- rows
+function leadRow(l,b){
+  const c=C[b[0]], key=l.id+'|'+b[0], on=!!contacted[key];
+  return `<tr class="${on?'ct':''}"><td><b>${esc(c.n||'(sin nombre)')}</b> ${c.vip?'<span class="chip vip">VIP</span>':''}</td>
+  <td class="tel">${esc(c.t)}</td><td><span class="chip ${VC[c.v]}">${c.v}</span></td>
+  <td class="r num">${b[1]}×</td><td class="r num">${fdate(b[2])}</td><td class="r num">${fdate(c.u)}</td>
+  <td class="r"><button class="btn sm" aria-pressed="${on}" data-k="${key}">${on?'✓ Contactado':'Marcar contactado'}</button></td></tr>`;
+}
+function rowBody(l){
+  const vlist = state.vend==='Todos' ? [...V,'Libre'] : [state.vend,'Libre',...V.filter(v=>v!==state.vend)];
+  let rows='', n=0; vlist.forEach(v=>l.warm[v].forEach(b=>{rows+=leadRow(l,b); n++;}));
+  const octB = l.buyers.filter(b=>b[3]).map(b=>C[b[0]]?.n).filter(Boolean);
+  const bodB = (D.bod[l.bod]||[]).filter(x=>C[x[0]] && !l.buyers.some(b=>b[0]===x[0])).filter(x=>state.vend==='Todos'||C[x[0]].v===state.vend||C[x[0]].v==='Libre').slice(0,25);
+  return `<div class="bd">
+    <div class="sold"><b>Vendido en ${D.mes.split(' ')[0].toLowerCase()}:</b> ${V.map(v=>`<span><span class="chip ${VC[v]}">${v}</span> ${l.byv[v]||0}</span>`).join('')}${l.byv.Otro?`<span>Otro ${l.byv.Otro}</span>`:''}</div>
+    <h4>Clientes que ya compraron esta etiqueta · ${n}${state.vend!=='Todos'?' · primero los de '+state.vend:''}</h4>
+    ${n?`<div class="tw"><table><thead><tr><th>Cliente</th><th>Teléfono</th><th>Vendedor</th><th class="r">Veces</th><th class="r">Últ. esta etiq.</th><th class="r">Últ. compra</th><th class="r"></th></tr></thead><tbody>${rows}</tbody></table></div>`
+      :`<div class="empty"><b>Nadie la compró antes según el CRM</b>Usá los clientes de la bodega de abajo, o buscá un cliente puntual en “Buscar cliente”.</div>`}
+    ${octB.length?`<p class="note" style="margin-top:10px">Ya la compraron este mes: ${esc(octB.join(', '))}</p>`:''}
+    ${bodB.length?`<details><summary>Clientes de ${esc(l.bod)} que todavía no probaron esta etiqueta (${bodB.length})</summary>
+      <div class="tw" style="margin-top:8px"><table><thead><tr><th>Cliente</th><th>Teléfono</th><th>Vendedor</th><th class="r">Compras bodega</th><th class="r">Última</th></tr></thead><tbody>
+      ${bodB.map(x=>{const c=C[x[0]];return `<tr><td><b>${esc(c.n)}</b> ${c.vip?'<span class="chip vip">VIP</span>':''}</td><td class="tel">${esc(c.t)}</td><td><span class="chip ${VC[c.v]}">${c.v}</span></td><td class="r num">${x[1]}×</td><td class="r num">${fdate(x[2])}</td></tr>`}).join('')}
+      </tbody></table></div></details>`:''}
+  </div>`;
+}
+function labelRow(l,i){
+  const open=state.open.has(l.id), ml=myLeads(l);
+  const leads = state.vend==='Todos'
+    ? V.map(v=>`<span class="chip ${VC[v]}" title="Clientes de ${v} que ya la compraron">${v.slice(0,2)} ${l.warm[v].length}</span>`).join('')+(freeLeads(l)?`<span class="chip libre">Libres ${freeLeads(l)}</span>`:'')
+    : `<span class="chip ${VC[state.vend]}">${ml} ${ml===1?'cliente mío':'clientes míos'}</span>${freeLeads(l)?`<span class="chip libre">${freeLeads(l)} libres</span>`:''}`;
+  return `<div class="row ${open?'open':''}" id="row-${l.id}">
+    <button class="hd" data-id="${l.id}" aria-expanded="${open}">
+      <div class="rk num">${i+1}</div>
+      <div class="main">
+        <div class="ttl">${esc(l.name)}</div>
+        <div class="meta"><span class="price num">${l.price?money(l.price):'s/precio'} la botella</span><span>·</span><span>${esc(l.bod)}</span><span class="chip g-${l.gama}">${l.gama}</span>${l.var.map(v=>`<span class="chip var">${esc(v)}</span>`).join('')}</div>
+        <div class="prg"><div class="track"><i class="done" style="width:${Math.min(100,l.sold/l.obj*100)}%"></i></div><span class="t num"><b>${l.sold}</b>/${l.obj} · faltan <b>${l.rest}</b></span>${l.rest<=2?'<span class="chip near">cerca</span>':''}</div>
+      </div>
+      <div class="met">
+        <div class="money num"><div class="m">${money(l.eff)}</div><div class="s">por caja que falta · bono ${money(l.sim)}</div></div>
+        <div class="leads">${leads}</div>
+      </div>
+      ${CHEV}
+    </button>${open?rowBody(l):''}</div>`;
+}
+function bindRows(el){
+  el.querySelectorAll('.hd[data-id]').forEach(h=>h.onclick=()=>{const id=+h.dataset.id; state.open.has(id)?state.open.delete(id):state.open.add(id); renderCurrent();});
+  el.querySelectorAll('button[data-k]').forEach(b=>b.onclick=e=>{e.stopPropagation(); const k=b.dataset.k; contacted[k]?delete contacted[k]:contacted[k]=1; saveContact(); renderCurrent();});
+}
+const activeFilters = () => [state.bod,state.gama,state.var,state.maxRest,state.onlyMine,state.q.trim()].filter(Boolean).length;
+
+// ---- tab PRIO
+function renderPrio(){
+  const arr=pendingSorted();
+  const bods=[...new Set(L.filter(l=>!l.done).map(l=>l.bod))].sort((a,b)=>a.localeCompare(b));
+  const vars=[...new Set(L.filter(l=>!l.done).flatMap(l=>l.var))].sort((a,b)=>a.localeCompare(b));
+  const el=document.getElementById('v-prio');
+  const nf=activeFilters();
+  el.innerHTML=`
+  <p class="note">Una etiqueta paga sólo cuando se completa. El orden recomendado prioriza <b>$ de bono por cada caja que falta</b>: lo que más plata desbloquea con menos esfuerzo. Gamas por precio de botella: ${GAMAS.map(g=>`${g} ${GAMA_RANGE[g]}`).join(' · ')}.</p>
+  <div class="tool">
+    <label class="search"><span class="sr" hidden>Buscar</span>${SEARCH}<input id="q" type="text" placeholder="Buscar etiqueta, bodega o varietal…" value="${esc(state.q)}" aria-label="Buscar etiqueta"></label>
+    <span class="sel ${state.bod?'on':''}"><select id="bod" aria-label="Bodega"><option value="">Bodega</option>${bods.map(b=>`<option ${state.bod===b?'selected':''} value="${esc(b)}">${esc(b)}</option>`).join('')}</select></span>
+    <span class="sel ${state.gama?'on':''}"><select id="gama" aria-label="Gama"><option value="">Gama</option>${GAMAS.map(g=>`<option ${state.gama===g?'selected':''} value="${g}">${g} · ${GAMA_RANGE[g]}</option>`).join('')}</select></span>
+    <span class="sel ${state.var?'on':''}"><select id="var" aria-label="Varietal"><option value="">Varietal</option>${vars.map(v=>`<option ${state.var===v?'selected':''} value="${esc(v)}">${esc(v)}</option>`).join('')}</select></span>
+    <span class="sel ${state.maxRest?'on':''}"><select id="maxRest" aria-label="Cajas que faltan"><option value="0">Faltan: todas</option>${[1,2,3,5].map(n=>`<option value="${n}" ${state.maxRest===n?'selected':''}>Faltan ≤ ${n}</option>`).join('')}</select></span>
+    <label class="toggle ${state.onlyMine?'on':''}"><input type="checkbox" id="onlyMine" ${state.onlyMine?'checked':''}> Con clientes ${state.vend==='Todos'?'calientes':'míos'}</label>
+  </div>
+  <div class="bar2">
+    <div class="count num"><b>${arr.length}</b> etiquetas pendientes${nf?` · ${nf} filtro${nf>1?'s':''} activo${nf>1?'s':''} <button class="btn ghost sm" id="clear">Limpiar</button>`:''}</div>
+    <div class="sortseg" role="group" aria-label="Ordenar por">
+      ${[['eff','$ por caja'],['rest','Más cerca'],['leads','Más clientes'],['sim','Mayor bono'],['name','A–Z']].map(([k,t])=>`<button data-s="${k}" aria-pressed="${state.sort===k}">${t}</button>`).join('')}
+    </div>
+  </div>
+  <div class="list">
+  ${arr.length? arr.slice(0,state.caps).map(labelRow).join('') : `<div class="empty"><b>Ninguna etiqueta coincide</b>Sacá algún filtro o probá otra bodega/varietal.${nf?' <button class="btn ghost sm" id="clear2">Limpiar filtros</button>':''}</div>`}
+  </div>
+  ${arr.length>state.caps?`<div style="text-align:center;margin-top:12px"><button class="btn" id="moreBtn">Mostrar ${Math.min(25,arr.length-state.caps)} más · quedan ${arr.length-state.caps}</button></div>`:''}`;
+  const q=el.querySelector('#q'); q.oninput=e=>{state.q=e.target.value; state.caps=25; renderPrio(); const i=el.querySelector('#q'); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
+  el.querySelector('#bod').onchange=e=>{state.bod=e.target.value; renderPrio();};
+  el.querySelector('#gama').onchange=e=>{state.gama=e.target.value; renderPrio();};
+  el.querySelector('#var').onchange=e=>{state.var=e.target.value; renderPrio();};
+  el.querySelector('#maxRest').onchange=e=>{state.maxRest=+e.target.value; renderPrio();};
+  el.querySelector('#onlyMine').onchange=e=>{state.onlyMine=e.target.checked; renderPrio();};
+  el.querySelectorAll('.sortseg button').forEach(b=>b.onclick=()=>{state.sort=b.dataset.s; renderPrio();});
+  ['clear','clear2'].forEach(id=>{const c=el.querySelector('#'+id); if(c) c.onclick=()=>{Object.assign(state,{q:'',bod:'',gama:'',var:'',maxRest:0,onlyMine:false,caps:25}); renderPrio();};});
+  const mb=el.querySelector('#moreBtn'); if(mb) mb.onclick=()=>{state.caps+=25; renderPrio();};
+  bindRows(el);
+}
+
+// ---- tab PLAN
+let planN=30, planMine=true;
+function renderPlan(){
+  const el=document.getElementById('v-plan');
+  const mine=state.vend!=='Todos';
+  let pool=L.filter(l=>!l.done); if(mine&&planMine) pool=pool.filter(l=>l.warm[state.vend].length>0);
+  pool.sort((a,b)=>b.eff-a.eff||a.rest-b.rest);
+  let left=planN, picked=[], gained=0;
+  for(const l of pool){ if(l.rest<=left){picked.push(l); left-=l.rest; gained+=l.sim;} }
+  const nd=DONE_SIM+gained;
+  el.innerHTML=`
+  <p class="note">Elegí cuántas cajas creés que podés vender y el simulador arma el combo de etiquetas a completar que más bono desbloquea con esa cantidad.</p>
+  <div class="sim"><div class="panel">
+    <div class="hd2"><div class="n num">${planN}<small>cajas a vender</small></div>
+      ${mine?`<label class="toggle ${planMine?'on':''}"><input type="checkbox" id="planMine" ${planMine?'checked':''}> Sólo etiquetas con clientes de ${state.vend}</label>`:''}</div>
+    <input type="range" id="planN" min="1" max="200" value="${planN}" aria-label="Cajas a vender">
+    <div class="track" style="height:12px;margin:8px 0 4px"><i class="done" style="width:${DONE_SIM/TOTAL_SIM*100}%"></i><i class="plan" style="width:${gained/TOTAL_SIM*100}%"></i></div>
+    <div class="legend"><span><i style="background:var(--wine)"></i>Ya cumplido ${pct(DONE_SIM/TOTAL_SIM)}</span><span><i style="background:var(--wine-mid);opacity:.55"></i>Con este plan +${pct(gained/TOTAL_SIM)}</span></div>
+    <div class="facts num" style="margin-top:16px;grid-template-columns:repeat(4,1fr)">
+      <div class="fact"><div class="l">Etiquetas a completar</div><div class="v">${picked.length} <small>· ${planN-left} cajas</small></div></div>
+      <div class="fact"><div class="l">Bono que se suma</div><div class="v" style="color:var(--ok)">+${money(gained)}</div></div>
+      <div class="fact"><div class="l">Bono global pasaría a</div><div class="v">${money(nd)} <small>· ${pct(nd/TOTAL_SIM)}</small></div></div>
+      <div class="fact"><div class="l">Cada uno cobraría</div><div class="v">${money(nd/3)}</div></div>
+    </div>
+  </div></div>
+  <div class="list">${picked.length?picked.map(labelRow).join(''):'<div class="empty"><b>Con esa cantidad no se completa ninguna etiqueta</b>Subí la barra o sacá el filtro de clientes.</div>'}</div>`;
+  el.querySelector('#planN').oninput=e=>{planN=+e.target.value; renderPlan();};
+  const pm=el.querySelector('#planMine'); if(pm) pm.onchange=e=>{planMine=e.target.checked; renderPlan();};
+  bindRows(el);
+}
+
+// ---- tab ALL
+function renderAllTab(){
+  const el=document.getElementById('v-all'), q=state.allq.trim().toLowerCase(), s=state.allsort;
+  let arr=L.filter(l=>!q||l.name.toLowerCase().includes(q)||l.bod.toLowerCase().includes(q)||l.var.join(' ').toLowerCase().includes(q));
+  if(!state.allShowDone) arr=arr.filter(l=>!l.done);
+  arr.sort((a,b)=> s==='name'?a.name.localeCompare(b.name): s==='sim'?b.sim-a.sim: s==='price'?(b.price||0)-(a.price||0): s==='mine'?(b.byv[state.vend]||0)-(a.byv[state.vend]||0): (a.done-b.done)||a.rest-b.rest);
+  el.innerHTML=`
+  <div class="tool"><label class="search">${SEARCH}<input id="allq" type="text" placeholder="Buscar…" value="${esc(state.allq)}" aria-label="Buscar"></label>
+    <span class="sel"><select id="allsort" aria-label="Ordenar"><option value="rest" ${s==='rest'?'selected':''}>Más cerca</option><option value="name" ${s==='name'?'selected':''}>A–Z</option><option value="sim" ${s==='sim'?'selected':''}>Mayor bono</option><option value="price" ${s==='price'?'selected':''}>Mayor precio</option>${state.vend!=='Todos'?`<option value="mine" ${s==='mine'?'selected':''}>Más vendidas por ${state.vend}</option>`:''}</select></span>
+    <label class="toggle ${state.allShowDone?'on':''}"><input type="checkbox" id="allDone" ${state.allShowDone?'checked':''}> Incluir completadas</label>
+    <span class="count num"><b>${arr.length}</b> etiquetas</span></div>
+  <div class="tw"><table><thead><tr><th>Etiqueta</th><th class="r">Precio</th><th>Gama</th><th class="r">Obj.</th><th class="r">Vend.</th><th class="r">Faltan</th>${V.map(v=>`<th class="r" title="${v}">${v.slice(0,2).toUpperCase()}</th>`).join('')}<th class="r">Bono</th><th class="r">$/caja</th></tr></thead><tbody>
+  ${arr.map(l=>`<tr><td><b>${esc(l.name)}</b><div class="meta" style="margin-top:1px">${esc(l.bod)} · ${l.var.join(', ')}</div></td><td class="r num">${l.price?money(l.price):'—'}</td><td><span class="chip g-${l.gama}">${l.gama}</span></td><td class="r num">${l.obj}</td><td class="r num">${l.sold}</td><td class="r num">${l.done?'<span class="chip done">✓ listo</span>':l.rest<=2?`<span class="chip near">${l.rest}</span>`:l.rest}</td>${V.map(v=>`<td class="r num" style="${v===state.vend?'font-weight:700;color:var(--wine)':''}">${l.byv[v]||''}</td>`).join('')}<td class="r num">${money(l.sim)}</td><td class="r num">${l.done?'—':money(l.eff)}</td></tr>`).join('')}
+  </tbody></table></div>`;
+  el.querySelector('#allq').oninput=e=>{state.allq=e.target.value; renderAllTab(); const i=el.querySelector('#allq'); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
+  el.querySelector('#allsort').onchange=e=>{state.allsort=e.target.value; renderAllTab();};
+  el.querySelector('#allDone').onchange=e=>{state.allShowDone=e.target.checked; renderAllTab();};
+}
+
+// ---- tab CLIENTE
+function renderCli(){
+  const el=document.getElementById('v-cli'), q=state.cliq.trim().toLowerCase().replace(/[\s-]/g,'');
+  let res=[]; if(q.length>=3) res=Object.entries(C).filter(([id,c])=>(c.n||'').toLowerCase().includes(q)||(c.t||'').replace(/[\s-]/g,'').includes(q)).slice(0,12);
+  el.innerHTML=`<p class="note">Te llama un cliente o lo vas a llamar: buscalo y te muestro qué etiquetas pendientes del bono ya le gustan (las compró antes), ordenadas por lo que más suma.</p>
+  <div class="tool"><label class="search">${SEARCH}<input id="cliq" type="text" placeholder="Nombre o teléfono (mínimo 3 caracteres)…" value="${esc(state.cliq)}" aria-label="Buscar cliente"></label></div>
+  ${res.length? res.map(([id,c])=>{
+    const pend=(byClient[id]||[]).filter(([l])=>!l.done).sort((a,b)=>b[0].eff-a[0].eff), done=(byClient[id]||[]).filter(([l])=>l.done).length;
+    return `<div class="cli"><h3>${esc(c.n||'(sin nombre)')} ${c.vip?'<span class="chip vip">VIP</span>':''}<span class="chip ${VC[c.v]}">${c.v}</span></h3>
+    <div class="sub num">📞 <span class="tel">${esc(c.t)}</span> · ${c.k} compras · última ${fdate(c.u)} · total histórico ${money(c.ltv||0)}</div>
+    ${pend.length?`<div class="tw"><table><thead><tr><th>Etiqueta pendiente que ya compró</th><th class="r">Precio</th><th class="r">Veces</th><th class="r">Última</th><th class="r">Faltan</th><th class="r">$/caja</th></tr></thead><tbody>
+      ${pend.map(([l,b])=>`<tr><td><b>${esc(l.name)}</b> ${b[3]?'<span class="chip done">compró este mes</span>':''}</td><td class="r num">${l.price?money(l.price):'—'}</td><td class="r num">${b[1]}×</td><td class="r num">${fdate(b[2])}</td><td class="r num">${l.rest}</td><td class="r num"><b>${money(l.eff)}</b></td></tr>`).join('')}
+      </tbody></table></div>`:`<div class="empty"><b>No compró etiquetas pendientes del bono</b>${done?`Sí compró ${done} que ya están completadas. `:''}Ofrecele algo de las bodegas que conoce.</div>`}
+    </div>`;}).join('') : (q.length>=3?'<div class="empty"><b>Sin resultados</b>Probá con parte del nombre o los últimos 4 dígitos del teléfono.</div>':'')}`;
+  el.querySelector('#cliq').oninput=e=>{state.cliq=e.target.value; renderCli(); const i=el.querySelector('#cliq'); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
+}
+
+// ---- shell
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{state.tab=b.dataset.t; renderAll();});
+function renderCurrent(){ ({prio:renderPrio,plan:renderPlan,all:renderAllTab,cli:renderCli})[state.tab](); }
+function renderAll(){
+  renderVend(); renderHero();
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===state.tab));
+  ['prio','plan','all','cli'].forEach(t=>document.getElementById('v-'+t).hidden=t!==state.tab);
+  renderCurrent(); renderStatus();
+}
+document.getElementById('mesLbl').textContent=D.mes;
+renderAll();
+refreshLive(false);
+setInterval(()=>refreshLive(false), LIVE_EVERY_MIN*60000);
+setInterval(renderStatus, 60000);
+</script>
+</body>
+</html>
