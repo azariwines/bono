@@ -7,7 +7,7 @@ App interna para el bono grupal por etiquetas. Sitio estático + una función se
 - `data.js` — ventas por vendedor del mes + historial de compradores por etiqueta (CRM Airtable). Se regenera a pedido.
 - `catalog.js` — catálogo STOCK 2026: bodega, precio, gama y varietal de cada etiqueta.
 - `api/ask.js` — función de Vercel que responde las preguntas del botón "Preguntale a la IA" usando la API de Anthropic.
-- `vercel.json` — configuración de la función.
+- `api/contacts.js` — función de Vercel que guarda/lee los contactos marcados en la tabla "Contactos Bono" de Airtable (registro compartido).
 - `logo-*.png` — logos.
 
 ## Deploy en Vercel
@@ -15,6 +15,7 @@ App interna para el bono grupal por etiquetas. Sitio estático + una función se
 2. Vercel importa el repo y despliega solo con cada commit.
 3. Para la IA: en Vercel → Settings → Environment Variables → agregar `ANTHROPIC_API_KEY` con una clave de https://console.anthropic.com (y redeploy).
    Opcional: `ANTHROPIC_MODEL` para cambiar el modelo (por defecto `claude-sonnet-5-5`).
+4. Para el registro compartido de contactos: variable `AIRTABLE_TOKEN` (token personal de Airtable con permisos data.records:read y data.records:write sobre la base "Azari Wines | CRM"). Opcionales: `AIRTABLE_BASE`, `AIRTABLE_TABLE`.
 
 ## Cambiar de mes
 Publicar la pestaña nueva como CSV, reemplazar `LIVE_CSV` en `index.html` y regenerar `data.js`.

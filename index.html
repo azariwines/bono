@@ -257,7 +257,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:v
     <form id="aiForm"><textarea id="aiQ" rows="1" placeholder="Ej: ¿qué le ofrezco a Nestor? / ¿qué cierro esta semana con 20 cajas?"></textarea><button class="btn primary" type="submit" id="aiSend">Enviar</button></form>
   </div>
 </div>
-<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Ventas por vendedor y historial de compradores (CRM Airtable): foto del 03/11/2026 12:50. Catálogo de precios y bodegas: STOCK 2026 (790 etiquetas) al 03/11/2026. Lo marcado como “contactado” se guarda sólo en este dispositivo.</footer>
+<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Ventas por vendedor y historial de compradores (CRM Airtable): foto del 03/11/2026 12:50. Catálogo de precios y bodegas: STOCK 2026 (790 etiquetas) al 03/11/2026. Los contactos marcados se guardan en la tabla “Contactos Bono” del CRM (Airtable), compartida para todo el equipo.</footer>
 
 <script src="catalog.js"></script>
 <script src="data.js"></script>
@@ -276,9 +276,37 @@ const SEARCH='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-
 
 const state = { vend:'Todos', tab:'prio', sort:'eff', q:'', bod:'', gama:'', var:'', onlyMine:false, maxRest:0, open:new Set(), others:new Set(), caps:25, allq:'', allsort:'rest', allShowDone:false, cliq:'' };
 try{ const s=localStorage.getItem('bono_vend'); if(s) state.vend=s; }catch(e){}
-let contacted = {};
-try{ contacted = JSON.parse(localStorage.getItem('bono_contact')||'{}'); }catch(e){}
-const saveContact = () => { try{ localStorage.setItem('bono_contact',JSON.stringify(contacted)); }catch(e){} };
+// ---- registro de contactos: compartido (Airtable vía /api/contacts) con respaldo local
+const CONTACTS_URL='/api/contacts';
+let contacted = {};                      // key -> {t, v, n(etiqueta), cid}
+let shared = { ok:false, err:null, tried:false };
+let localContacts = {};
+try{ localContacts = JSON.parse(localStorage.getItem('bono_contact')||'{}'); }catch(e){}
+const saveLocal = () => { try{ localStorage.setItem('bono_contact',JSON.stringify(localContacts)); }catch(e){} };
+const ckey = (name,cid) => D.mes+'|'+normKey(name)+'|'+cid;
+function migrateLocal(){ // claves viejas "idx|cid" -> "mes|etiqueta|cid"
+  const out={}; for(const [k,v] of Object.entries(localContacts)){ const [a,cid]=k.split('|'); if(/^\d+$/.test(a)){ const l=D.labels[+a]; if(!l) continue; out[ckey(l.name,cid)]=Object.assign({n:l.name,cid},typeof v==='object'?v:{t:null,v:'Equipo'}); } else out[k]=typeof v==='object'?v:{t:null,v:'Equipo'}; } localContacts=out; saveLocal(); }
+migrateLocal(); contacted=Object.assign({},localContacts);
+async function loadShared(){
+  shared.tried=true;
+  try{
+    const r=await fetch(CONTACTS_URL+'?mes='+encodeURIComponent(D.mes),{cache:'no-store'});
+    if(!(r.headers.get('content-type')||'').includes('json')) throw new Error('sin servidor');
+    const d=await r.json(); if(!r.ok||d.error) throw new Error(d.error||('HTTP '+r.status));
+    const srv={}; d.items.forEach(it=>{ srv[it.key]={t:it.t,v:it.v,n:it.etiqueta,cid:it.cid,res:it.resultado}; });
+    // subir lo que este dispositivo marcó antes y el servidor no tiene (rescata lo marcado antes del registro compartido)
+    const pend=Object.entries(localContacts).filter(([k])=>k.startsWith(D.mes+'|')&&!srv[k]);
+    for(const [k,v] of pend){ try{ const [,,cid]=k.split('|'); const rr=await fetch(CONTACTS_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'add',key:k,cid,etiqueta:v.n||'',vendedor:v.v||'Equipo',mes:D.mes})}); const dd=await rr.json(); if(dd.item) srv[k]={t:dd.item.t,v:dd.item.v,n:dd.item.etiqueta,cid:dd.item.cid,res:dd.item.resultado}; }catch(e){} }
+    contacted=srv; shared={ok:true,err:null,tried:true}; localContacts={}; saveLocal();
+  }catch(e){ shared={ok:false,err:e.message||String(e),tried:true}; contacted=Object.assign({},localContacts); }
+  renderHero(); renderRegistry(); renderCurrent();
+}
+async function toggleContact(l,cid){
+  const k=ckey(l.name,cid); const v=state.vend==='Todos'?'Equipo':state.vend;
+  if(contacted[k]){ delete contacted[k]; if(!shared.ok){ delete localContacts[k]; saveLocal(); } else { fetch(CONTACTS_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'remove',key:k})}).catch(()=>{}); } }
+  else { const val={t:new Date().toISOString(),v,n:l.name,cid}; contacted[k]=val; if(!shared.ok){ localContacts[k]=val; saveLocal(); } else { fetch(CONTACTS_URL,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'add',key:k,cid,etiqueta:l.name,vendedor:v,mes:D.mes})}).then(r=>r.json()).then(d=>{ if(d.error){ delete contacted[k]; shared.err=d.error; renderCurrent(); renderRegistry(); } }).catch(()=>{}); } }
+  renderCurrent(); renderHero(); renderRegistry();
+}
 
 // ---- catálogo (STOCK 2026): bodega, precio, gama, varietal para cualquier etiqueta, esté o no en el bono
 const CAT = window.CATALOG||{};
@@ -352,7 +380,7 @@ function renderVend(){
 }
 
 // ---- hero
-function renderRegistry(){ const el=document.getElementById('registry'); el.innerHTML=registryHTML(); el.querySelectorAll('button[data-k]').forEach(b=>b.onclick=()=>{ delete contacted[b.dataset.k]; saveContact(); renderRegistry(); renderCurrent(); }); }
+function renderRegistry(){ const el=document.getElementById('registry'); el.innerHTML=registryHTML(); el.querySelectorAll('button[data-rm]').forEach(b=>b.onclick=()=>{ const k=b.dataset.rm; const v=contacted[k]; if(!v) return; const l=L.find(z=>normKey(z.name)===k.split('|')[1])||{name:v.n||''}; toggleContact(l,v.cid||k.split('|').pop()); }); }
 function renderHero(){
   const doneN=L.filter(l=>l.done).length, one=L.filter(l=>!l.done&&l.rest===1).length, two=L.filter(l=>!l.done&&l.rest<=2).length;
   const mine = state.vend!=='Todos';
@@ -405,7 +433,7 @@ function relatedHTML(l){
 function goLabel(id){ state.tab='prio'; state.open.add(id); Object.assign(state,{q:'',bod:'',gama:'',var:'',maxRest:0,caps:9999}); renderAll(); setTimeout(()=>{const r=document.getElementById('row-'+id); if(r) r.scrollIntoView({behavior:'smooth',block:'start'});},50); }
 
 // ---- registro de contactos (se guarda en este dispositivo)
-function contactList(){ return Object.entries(contacted).map(([k,v])=>{ const [lid,cid]=k.split('|'); const o=typeof v==='object'?v:{t:null,v:'?'}; return {k,lid:+lid,cid,t:o.t?new Date(o.t):null,v:o.v||'?'}; }); }
+function contactList(){ return Object.entries(contacted).map(([k,v])=>{ const parts=k.split('|'); const cid=parts[parts.length-1]; return {k,cid:v.cid||cid,n:v.n||'',t:v.t?new Date(v.t):null,v:v.v||'?'}; }); }
 const dayKey = d => d ? d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0') : '';
 function contactStats(){
   const all=contactList().filter(x=>state.vend==='Todos'||x.v===state.vend);
@@ -416,9 +444,9 @@ function registryHTML(){
   const s=contactStats();
   const byV={}; contactList().forEach(x=>{ byV[x.v]=byV[x.v]||{hoy:0,total:0}; byV[x.v].total++; if(x.t&&dayKey(x.t)===dayKey(new Date())) byV[x.v].hoy++; });
   const rows=s.all.filter(x=>x.t).sort((a,b)=>b.t-a.t).slice(0,30);
-  const labelName=id=>{ const l=L.find(z=>z.id===id)||D.labels[id]; return l?l.name:'(etiqueta de otro mes)'; };
+  const labelName=x=>x.n||'(etiqueta)';
   return `<div class="panel reg">
-    <div class="eyebrow" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span>Registro de contactos ${state.vend==='Todos'?'· equipo':'· '+state.vend}</span><span class="st" style="color:var(--mut)">se guarda en este dispositivo</span></div>
+    <div class="eyebrow" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px"><span>Registro de contactos ${state.vend==='Todos'?'· equipo':'· '+state.vend}</span><span class="st" style="color:${shared.ok?'var(--ok)':'var(--mut)'}" title="${esc(shared.err||'')}">${shared.ok?'● registro compartido (Airtable)':shared.tried?'● sólo en este dispositivo — sin conexión al registro compartido':'cargando…'}</span></div>
     <div class="facts num" style="margin-top:10px">
       <div class="fact"><div class="l">Hoy</div><div class="v">${s.hoy}</div></div>
       <div class="fact"><div class="l">Últimos 7 días</div><div class="v">${s.semana}</div></div>
@@ -427,7 +455,7 @@ function registryHTML(){
     </div>
     <details style="margin-top:6px"><summary>Ver últimos contactos (${rows.length})</summary>
       ${rows.length?`<div class="tw" style="margin-top:8px"><table><thead><tr><th>Cuándo</th><th>Cliente</th><th>Etiqueta</th><th>Marcó</th><th class="r"></th></tr></thead><tbody>
-      ${rows.map(x=>{const c=C[x.cid]||{}; return `<tr><td class="num" style="white-space:nowrap">${fdate(x.t.toISOString())} ${String(x.t.getHours()).padStart(2,'0')}:${String(x.t.getMinutes()).padStart(2,'0')}</td><td><b>${esc(c.n||x.cid)}</b> <span class="tel">${esc(c.t||'')}</span></td><td>${esc(labelName(x.lid))}</td><td><span class="chip ${VC[x.v]||'libre'}">${esc(x.v)}</span></td><td class="r"><button class="btn sm" data-k="${x.k}">Quitar</button></td></tr>`;}).join('')}
+      ${rows.map(x=>{const c=C[x.cid]||{}; return `<tr><td class="num" style="white-space:nowrap">${fdate(x.t.toISOString())} ${String(x.t.getHours()).padStart(2,'0')}:${String(x.t.getMinutes()).padStart(2,'0')}</td><td><b>${esc(c.n||x.cid)}</b> <span class="tel">${esc(c.t||'')}</span></td><td>${esc(labelName(x))}</td><td><span class="chip ${VC[x.v]||'libre'}">${esc(x.v)}</span></td><td class="r"><button class="btn sm" data-rm="${x.k}">Quitar</button></td></tr>`;}).join('')}
       </tbody></table></div>`:'<div class="empty" style="margin-top:8px"><b>Todavía no hay contactos marcados</b>Abrí una etiqueta y tocá “Marcar contactado” en el cliente que llamaste.</div>'}
     </details>
   </div>`;
@@ -435,11 +463,11 @@ function registryHTML(){
 
 // ---- rows
 function leadRow(l,b){
-  const c=C[b[0]], key=l.id+'|'+b[0], on=!!contacted[key];
+  const c=C[b[0]], key=ckey(l.name,b[0]), on=!!contacted[key];
   return `<tr class="${on?'ct':''}"><td><b>${esc(c.n||'(sin nombre)')}</b> ${c.vip?'<span class="chip vip">VIP</span>':''}</td>
   <td class="tel">${esc(c.t)}</td><td><span class="chip ${VC[c.v]}">${c.v}</span></td>
   <td class="r num">${b[1]}×</td><td class="r num">${fdate(b[2])}</td><td class="r num">${fdate(c.u)}</td><td class="r num">${c.pm?money(c.pm):'—'}</td>
-  <td class="r"><button class="btn sm" aria-pressed="${on}" data-k="${key}">${on?'✓ Contactado':'Marcar contactado'}</button></td></tr>`;
+  <td class="r"><button class="btn sm" aria-pressed="${on}" data-k="${key}" data-l="${l.id}" data-c="${b[0]}">${on?'✓ Contactado':'Marcar contactado'}</button></td></tr>`;
 }
 function rowBody(l){
   const mine = state.vend!=='Todos';
@@ -493,7 +521,7 @@ function bindRows(el){
   el.querySelectorAll('button[data-oth]').forEach(b=>b.onclick=e=>{e.stopPropagation(); const id=+b.dataset.oth; state.others.has(id)?state.others.delete(id):state.others.add(id); renderCurrent();});
   el.querySelectorAll('.relc[data-go]').forEach(b=>b.onclick=e=>{e.stopPropagation(); goLabel(+b.dataset.go);});
   el.querySelectorAll('.hd[data-id]').forEach(h=>h.onclick=()=>{const id=+h.dataset.id; state.open.has(id)?state.open.delete(id):state.open.add(id); renderCurrent();});
-  el.querySelectorAll('button[data-k]').forEach(b=>b.onclick=e=>{e.stopPropagation(); const k=b.dataset.k; if(contacted[k]) delete contacted[k]; else contacted[k]={t:new Date().toISOString(),v:state.vend==='Todos'?'Equipo':state.vend}; saveContact(); renderCurrent(); renderHero(); renderRegistry();});
+  el.querySelectorAll('button[data-k][data-l]').forEach(b=>b.onclick=e=>{e.stopPropagation(); const l=L.find(z=>z.id===+b.dataset.l); if(l) toggleContact(l,b.dataset.c);});
 }
 const activeFilters = () => [state.bod,state.gama,state.var,state.maxRest,state.onlyMine,state.q.trim()].filter(Boolean).length;
 
@@ -655,6 +683,7 @@ function renderAll(){
 }
 document.getElementById('mesLbl').textContent=D.mes;
 renderAll();
+loadShared();
 refreshLive(false);
 setInterval(()=>refreshLive(false), LIVE_EVERY_MIN*60000);
 setInterval(renderStatus, 60000);
