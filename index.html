@@ -270,6 +270,7 @@ const VC = {Franco:'fr',Ezequiel:'ez',Elias:'el',Libre:'libre'};
 const money = n => '$' + Math.round(n).toLocaleString('es-AR');
 const moneyK = n => n>=1000 ? '$'+(n/1000).toLocaleString('es-AR',{maximumFractionDigits:n>=100000?0:1})+'k' : money(n);
 const pct = n => (n*100).toFixed(1).replace('.',',') + '%';
+const normKey = s => String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fdate = s => s ? s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(2,4) : '—';
 const GAMAS=['Entrada','Media','Alta','Premium','Ícono'];
@@ -313,7 +314,6 @@ async function toggleContact(l,cid){
 
 // ---- catálogo (STOCK 2026): bodega, precio, gama, varietal para cualquier etiqueta, esté o no en el bono
 const CAT = window.CATALOG||{};
-const normKey = s => String(s).normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 function applyCatalog(l){ const c=CAT[normKey(l.name)]; if(c){ l.bod=c[0]; l.price=c[1]; l.gama=c[2]; l.var=c[3]; } else { l.bod=l.bod||'Sin catálogo'; l.price=l.price||null; l.gama=l.gama||'Sin precio'; l.var=l.var&&l.var.length?l.var:['Otro']; } return l; }
 // ---- fuente en vivo (CSV publicado del Dashboard)
 const LIVE_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZsICWrpR9qQIguPgS-gZbdrqT7PuB1ADL6TC1Gb1OpW6fE0sXpv32wDIQKW1The_4kLpUBf0qEepa/pub?gid=1186328547&single=true&output=csv';
