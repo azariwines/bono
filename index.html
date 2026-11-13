@@ -259,6 +259,9 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:v
 </div>
 <footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Ventas por vendedor y historial de compradores (CRM Airtable): foto del 03/11/2026 12:50. Catálogo de precios y bodegas: STOCK 2026 (790 etiquetas) al 03/11/2026. Los contactos marcados se guardan en la tabla “Contactos Bono” del CRM (Airtable), compartida para todo el equipo.</footer>
 
+<script>
+window.addEventListener('error',function(e){ try{ var m=document.getElementById('errbox'); if(!m){ m=document.createElement('div'); m.id='errbox'; m.style.cssText='margin:16px;padding:14px 16px;background:#fdf2f2;border:1px solid #e0b4b4;border-radius:12px;color:#7f1d1d;font:14px/1.5 Inter,system-ui,sans-serif'; var main=document.querySelector('main'); main.insertBefore(m,main.firstChild); } m.innerHTML='<b>La app no pudo cargar en este navegador.</b> Probá actualizar Chrome (menú ⋮ → Ayuda → Información de Google Chrome) o abrila en otro navegador. Si sigue igual, mandá una captura de este mensaje.<br><span style="font-size:12px;opacity:.8">Detalle técnico: '+String(e.message||e.error||'error')+'</span>'; }catch(x){} });
+</script>
 <script src="catalog.js"></script>
 <script src="data.js"></script>
 <script>
@@ -267,7 +270,7 @@ const VC = {Franco:'fr',Ezequiel:'ez',Elias:'el',Libre:'libre'};
 const money = n => '$' + Math.round(n).toLocaleString('es-AR');
 const moneyK = n => n>=1000 ? '$'+(n/1000).toLocaleString('es-AR',{maximumFractionDigits:n>=100000?0:1})+'k' : money(n);
 const pct = n => (n*100).toFixed(1).replace('.',',') + '%';
-const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fdate = s => s ? s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(2,4) : '—';
 const GAMAS=['Entrada','Media','Alta','Premium','Ícono'];
 const GAMA_RANGE={Entrada:'< $15k',Media:'$15–30k',Alta:'$30–60k',Premium:'$60–150k','Ícono':'> $150k'};
@@ -473,10 +476,10 @@ function rowBody(l){
   const mine = state.vend!=='Todos';
   const vlist = mine ? [state.vend,'Libre'] : [...V,'Libre'];
   let rows='', n=0; vlist.forEach(v=>l.warm[v].forEach(b=>{rows+=leadRow(l,b); n++;}));
-  const others = mine ? V.filter(v=>v!==state.vend).flatMap(v=>l.warm[v]) : [];
+  const others = mine ? [].concat.apply([],V.filter(v=>v!==state.vend).map(v=>l.warm[v])) : [];
   const showOthers = mine && state.others.has(l.id);
   if(showOthers) others.forEach(b=>{rows+=leadRow(l,b); n++;});
-  const octB = l.buyers.filter(b=>b[3]).map(b=>C[b[0]]?.n).filter(Boolean);
+  const octB = l.buyers.filter(b=>b[3]).map(b=>(C[b[0]]||{}).n).filter(Boolean);
   const P=l.price||0;
   const aff = c => !P||!c.px ? 0.5 : Math.min(1,c.px/P);           // qué tan cerca está su botella más cara del precio de esta etiqueta
   const bodAll = (D.bod[l.bod]||[]).filter(x=>C[x[0]] && !l.buyers.some(b=>b[0]===x[0])).filter(x=>state.vend==='Todos'||C[x[0]].v===state.vend||C[x[0]].v==='Libre');
@@ -529,7 +532,7 @@ const activeFilters = () => [state.bod,state.gama,state.var,state.maxRest,state.
 function renderPrio(){
   const arr=pendingSorted();
   const bods=[...new Set(L.filter(l=>!l.done).map(l=>l.bod))].sort((a,b)=>a.localeCompare(b));
-  const vars=[...new Set(L.filter(l=>!l.done).flatMap(l=>l.var))].sort((a,b)=>a.localeCompare(b));
+  const vars=[...new Set([].concat.apply([],L.filter(l=>!l.done).map(l=>l.var)))].sort((a,b)=>a.localeCompare(b));
   const el=document.getElementById('v-prio');
   const nf=activeFilters();
   el.innerHTML=`
