@@ -10,7 +10,7 @@ const BASE = process.env.AIRTABLE_BASE || 'applCwqDv9sbZn3NM';
 const T_VENTAS = 'tblCrpedq0tb7YHnJ';
 const T_CLIENTES = 'tblfFfmxNBaAI6XS4';
 const FV = { fecha: 'Fecha de entrega', cliente: 'Cliente', ets: 'Field 0 (from Etiquetas compradas)', vend: 'Vendedor' };
-const FC = { tel: 'Teléfono', nombre: 'Nombre y apellido', vip: 'Cliente VIP', compras: 'Total de compras', ultima: 'Última fecha de compra', ltv: 'Valor total de vida' };
+const FC = { tel: 'Teléfono', nombre: 'Nombre y apellido', vip: 'Cliente VIP', compras: 'Total de compras', ultima: 'Última fecha de compra', ltv: 'Valor total de vida', zonas: 'ZONAS' };
 
 async function atList(table, params) {
   const out = []; let offset = '';
@@ -24,7 +24,7 @@ async function atList(table, params) {
   return out;
 }
 const esc = s => String(s).replace(/'/g, "\\'");
-const cliObj = r => { const f = r.fields || {}; return { n: f[FC.nombre] || '', t: f[FC.tel] || '', vip: f[FC.vip] === 'Sí', k: f[FC.compras] || 0, u: f[FC.ultima] || '', ltv: f[FC.ltv] || 0 }; };
+const cliObj = r => { const f = r.fields || {}; return { n: f[FC.nombre] || '', t: f[FC.tel] || '', vip: f[FC.vip] === 'Sí', k: f[FC.compras] || 0, u: f[FC.ultima] || '', ltv: f[FC.ltv] || 0, zid: f[FC.zonas] || [] }; };
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
