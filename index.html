@@ -257,7 +257,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:v
     <form id="aiForm"><textarea id="aiQ" rows="1" placeholder="Ej: ¿qué le ofrezco a Nestor? / ¿qué cierro esta semana con 20 cajas?"></textarea><button class="btn primary" type="submit" id="aiSend">Enviar</button></form>
   </div>
 </div>
-<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Ventas por vendedor y historial de compradores (CRM Airtable): foto del 03/11/2026 12:50. Catálogo de precios y bodegas: STOCK 2026 (790 etiquetas) al 03/11/2026. Los contactos marcados se guardan en la tabla “Contactos Bono” del CRM (Airtable), compartida para todo el equipo.</footer>
+<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Historial de compradores: foto del CRM (Airtable) del 18/11/2026 + ventas nuevas traídas en vivo al abrir. Ventas por vendedor del mes: hoja “VENTAS NOVIEMBRE” al 18/11/2026. Catálogo de precios y bodegas: STOCK 2026 (792 etiquetas) al 18/11/2026. Los contactos marcados se guardan en la tabla “Contactos Bono” del CRM (Airtable), compartida para todo el equipo.</footer>
 
 <script>
 window.addEventListener('error',function(e){ try{ var m=document.getElementById('errbox'); if(!m){ m=document.createElement('div'); m.id='errbox'; m.style.cssText='margin:16px;padding:14px 16px;background:#fdf2f2;border:1px solid #e0b4b4;border-radius:12px;color:#7f1d1d;font:14px/1.5 Inter,system-ui,sans-serif'; var main=document.querySelector('main'); main.insertBefore(m,main.firstChild); } m.innerHTML='<b>La app no pudo cargar en este navegador.</b> Probá actualizar Chrome (menú ⋮ → Ayuda → Información de Google Chrome) o abrila en otro navegador. Si sigue igual, mandá una captura de este mensaje.<br><span style="font-size:12px;opacity:.8">Detalle técnico: '+String(e.message||e.error||'error')+'</span>'; }catch(x){} });
@@ -314,7 +314,7 @@ async function toggleContact(l,cid){
 
 // ---- catálogo (STOCK 2026): bodega, precio, gama, varietal para cualquier etiqueta, esté o no en el bono
 const CAT = window.CATALOG||{};
-function applyCatalog(l){ const c=CAT[normKey(l.name)]; if(c){ l.bod=c[0]; l.price=c[1]; l.gama=c[2]; l.var=c[3]; } else { l.bod=l.bod||'Sin catálogo'; l.price=l.price||null; l.gama=l.gama||'Sin precio'; l.var=l.var&&l.var.length?l.var:['Otro']; } return l; }
+function applyCatalog(l){ const k=normKey(l.name); if(!l.buyers||!l.buyers.length) l.buyers=(D.buyers&&D.buyers[k])||[]; if(!l.byv||!Object.keys(l.byv).length) l.byv=(D.byv&&D.byv[k])||{}; const c=CAT[k]; if(c){ l.bod=c[0]; l.price=c[1]; l.gama=c[2]; l.var=c[3]; } else { l.bod=l.bod||'Sin catálogo'; l.price=l.price||null; l.gama=l.gama||'Sin precio'; l.var=l.var&&l.var.length?l.var:['Otro']; } return l; }
 // ---- fuente en vivo (CSV publicado del Dashboard)
 const LIVE_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZsICWrpR9qQIguPgS-gZbdrqT7PuB1ADL6TC1Gb1OpW6fE0sXpv32wDIQKW1The_4kLpUBf0qEepa/pub?gid=1186328547&single=true&output=csv';
 const LIVE_EVERY_MIN = 5;
@@ -326,20 +326,46 @@ function num(s){ s=String(s||'').replace(/[$\s]/g,''); if(!s) return 0; if(/^-?\
 function labelsFromCSV(text){
   const rows=parseCSV(text); let i=rows.findIndex(r=>/objetivo/i.test(r[0]||'')&&/objetivo/i.test(r[1]||'')); if(i<0) throw new Error('No encontré la tabla de etiquetas en el CSV');
   const out=[]; for(const r of rows.slice(i+1)){ const name=(r[0]||'').trim(); if(!name) continue; const obj=Math.round(num(r[1])), sold=Math.round(num(r[2])), sim=num(r[5]); if(obj<=0) continue;
-    const e=EMB[normKey(name)]; out.push({ id:out.length, name, obj, sold, sim, byv:e?e.byv:{}, buyers:e?e.buyers:[], bod:e?e.bod:'', price:e?e.price:null, gama:e?e.gama:'', var:e?e.var:[] }); }
+    const e=EMB[normKey(name)]; out.push({ id:out.length, name, obj, sold, sim, byv:{}, buyers:[], bod:'', price:null, gama:'', var:[] }); }
   if(out.length<20) throw new Error('El CSV vino casi vacío ('+out.length+' filas)');
   return out;
+}
+
+// ---- CRM al día: ventas nuevas en Airtable desde la foto (D.pulled)
+const DELTA_URL='/api/delta';
+let crm = { ok:false, at:null, err:null, n:0 };
+let lastRaw = null;
+async function syncCRM(){
+  if(!D.pulled) return;
+  try{
+    const r=await fetch(DELTA_URL+'?since='+encodeURIComponent(D.pulled),{cache:'no-store'});
+    if(!(r.headers.get('content-type')||'').includes('json')) throw new Error('sin servidor');
+    const d=await r.json(); if(!r.ok||d.error) throw new Error(d.error||('HTTP '+r.status));
+    Object.assign(C, d.clients||{});
+    const unknown=[]; d.sales.forEach(function(s){ if(s.cid&&!C[s.cid]&&unknown.indexOf(s.cid)<0) unknown.push(s.cid); });
+    if(unknown.length){ try{ const r2=await fetch(DELTA_URL+'?ids='+unknown.slice(0,50).join(',')); const d2=await r2.json(); Object.assign(C, d2.clients||{}); }catch(e){} }
+    D.buyers = D.buyers||{};
+    d.sales.forEach(function(s){
+      if(!s.cid||!C[s.cid]) return;
+      const c=C[s.cid]; if(s.v&&V.indexOf(s.v)>=0) c.v=s.v; if(!c.v) c.v='Libre'; if(s.d>(c.u||'')) c.u=s.d;
+      s.ets.forEach(function(name){ const k=normKey(name); const arr=D.buyers[k]=D.buyers[k]||[]; let b=null; for(const x of arr){ if(x[0]===s.cid){ b=x; break; } } if(!b){ b=[s.cid,0,'',false]; arr.push(b); } b[1]++; if(s.d>b[2]) b[2]=s.d; if(s.d.slice(0,7)===D.ym) b[3]=true; });
+    });
+    crm={ok:true,at:new Date(),err:null,n:d.sales.length};
+    if(lastRaw){ lastRaw.forEach(function(l){ l.buyers=D.buyers[normKey(l.name)]||[]; }); setLabels(lastRaw); renderAll(); }
+  }catch(e){ crm={ok:false,at:null,err:e.message||String(e),n:0}; renderStatus(); }
 }
 
 // ---- derive
 let L=[], TOTAL_SIM=0, DONE_SIM=0, byClient={};
 function setLabels(raw){
+  lastRaw = raw;
   L = raw.map((l,i)=>{ applyCatalog(l); const rest=Math.max(0,l.obj-l.sold), done=l.sold>=l.obj; return Object.assign({},l,{id:i,rest,done,eff:done?0:l.sim/rest}); });
   TOTAL_SIM = L.reduce((a,l)=>a+l.sim,0); DONE_SIM = L.filter(l=>l.done).reduce((a,l)=>a+l.sim,0);
   L.forEach(l=>{ const w={Franco:[],Ezequiel:[],Elias:[],Libre:[]}; l.buyers.forEach(b=>{const c=C[b[0]]; if(!c||b[3]) return; (w[c.v]||w.Libre).push(b);}); l.warm=w; });
   byClient={}; L.forEach(l=>l.buyers.forEach(b=>{(byClient[b[0]]=byClient[b[0]]||[]).push([l,b]);}));
   state.open=new Set();
 }
+D.labels.forEach(function(l){ l.buyers=[]; l.byv={}; });
 setLabels(D.labels);
 async function refreshLive(manual){
   if(live.loading) return; live.loading=true; renderStatus();
@@ -348,12 +374,14 @@ async function refreshLive(manual){
     const raw=labelsFromCSV(await r.text()); setLabels(raw); live={ok:true,at:new Date(),err:null,loading:false}; renderAll();
   }catch(e){ live.loading=false; live.err=e.message||String(e); if(!live.ok) live.ok=false; renderStatus(); }
 }
+function crmHTML(){ const d=D.pulled?fdate(D.pulled):'—'; if(crm.ok) return '<span class="st" title="'+crm.n+' ventas nuevas traídas de Airtable"><i class="dot ok"></i>CRM al día</span>'; return '<span class="st" title="'+esc(crm.err||'')+'"><i class="dot off"></i>CRM al '+d+'</span>'; }
+
 function statusHTML(){
   if(live.loading) return '<span class="st"><i class="dot busy"></i>Actualizando…</span>';
   if(live.ok){ const m=Math.round((Date.now()-live.at)/60000); return `<span class="st"><i class="dot ok"></i>En vivo · ${m<1?'recién':'hace '+m+' min'} <button class="lnk" id="refresh">Refrescar</button></span>`; }
   return `<span class="st" title="${esc(live.err||'')}"><i class="dot off"></i>Datos del 03/11 (sin conexión al Sheet) <button class="lnk" id="refresh">Reintentar</button></span>`;
 }
-function renderStatus(){ const s=document.getElementById('status'); if(!s) return; s.innerHTML=statusHTML(); const b=s.querySelector('#refresh'); if(b) b.onclick=()=>refreshLive(true); }
+function renderStatus(){ const s=document.getElementById('status'); if(!s) return; s.innerHTML=crmHTML()+' &nbsp; '+statusHTML(); const b=s.querySelector('#refresh'); if(b) b.onclick=()=>refreshLive(true); }
 const myLeads = l => state.vend==='Todos' ? l.buyers.filter(b=>!b[3]).length : l.warm[state.vend].length;
 const freeLeads = l => l.warm.Libre.length;
 
@@ -687,6 +715,7 @@ function renderAll(){
 document.getElementById('mesLbl').textContent=D.mes;
 renderAll();
 loadShared();
+syncCRM();
 refreshLive(false);
 setInterval(()=>refreshLive(false), LIVE_EVERY_MIN*60000);
 setInterval(renderStatus, 60000);

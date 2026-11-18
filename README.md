@@ -4,10 +4,11 @@ App interna para el bono grupal por etiquetas. Sitio estático + una función se
 
 ## Archivos
 - `index.html` — la app. Lee en vivo el CSV publicado del Dashboard (constante `LIVE_CSV`).
-- `data.js` — ventas por vendedor del mes + historial de compradores por etiqueta (CRM Airtable). Se regenera a pedido.
+- `data.js` — foto del CRM: compradores por etiqueta para TODO el catálogo (no sólo las del bono), clientes, ventas por vendedor del mes y la fecha de la foto (`pulled`). Se regenera cada tanto (al cambiar de mes, o para refrescar la lista de precios); entre medio, `api/delta.js` completa lo nuevo.
 - `catalog.js` — catálogo STOCK 2026: bodega, precio, gama y varietal de cada etiqueta.
 - `api/ask.js` — función de Vercel que responde las preguntas del botón "Preguntale a la IA" usando la API de Anthropic.
 - `api/contacts.js` — función de Vercel que guarda/lee los contactos marcados en la tabla "Contactos Bono" de Airtable (registro compartido).
+- `api/delta.js` — función de Vercel que trae de Airtable las ventas y clientes creados después de la foto de `data.js`, así los compradores por etiqueta están al día sin regenerar nada.
 - `logo-*.png` — logos.
 
 ## Deploy en Vercel
