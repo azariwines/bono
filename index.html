@@ -259,7 +259,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 24px;font-size:12px;color:v
     <form id="aiForm"><textarea id="aiQ" rows="1" placeholder="Ej: ¿qué le ofrezco a Nestor? / ¿qué cierro esta semana con 20 cajas?"></textarea><button class="btn primary" type="submit" id="aiSend">Enviar</button></form>
   </div>
 </div>
-<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Historial de compradores: foto del CRM (Airtable) del 18/11/2026 + ventas nuevas traídas en vivo al abrir. Ventas por vendedor del mes: hoja “VENTAS NOVIEMBRE” al 18/11/2026. Catálogo de precios y bodegas: STOCK 2026 (792 etiquetas) al 18/11/2026. Los contactos marcados se guardan en la tabla “Contactos Bono” del CRM (Airtable), compartida para todo el equipo.</footer>
+<footer><img src="logo-dark.png" alt="Azari Wines" style="height:26px;opacity:.55;display:block;margin-bottom:8px">Fuente: objetivos y cajas vendidas en vivo desde la hoja “Dashboard Noviembre 2026” (se refresca cada 5 min y al abrir). Historial de compradores: foto del CRM (Airtable) del 25/11/2026 + ventas nuevas traídas en vivo al abrir. Ventas por vendedor del mes: hoja “VENTAS NOVIEMBRE” al 25/11/2026. Catálogo de precios y bodegas: STOCK 2026 (798 etiquetas) al 25/11/2026. Los contactos marcados se guardan en la tabla “Contactos Bono” del CRM (Airtable), compartida para todo el equipo.</footer>
 
 <script>
 window.addEventListener('error',function(e){ try{ var m=document.getElementById('errbox'); if(!m){ m=document.createElement('div'); m.id='errbox'; m.style.cssText='margin:16px;padding:14px 16px;background:#fdf2f2;border:1px solid #e0b4b4;border-radius:12px;color:#7f1d1d;font:14px/1.5 Inter,system-ui,sans-serif'; var main=document.querySelector('main'); main.insertBefore(m,main.firstChild); } m.innerHTML='<b>La app no pudo cargar en este navegador.</b> Probá actualizar Chrome (menú ⋮ → Ayuda → Información de Google Chrome) o abrila en otro navegador. Si sigue igual, mandá una captura de este mensaje.<br><span style="font-size:12px;opacity:.8">Detalle técnico: '+String(e.message||e.error||'error')+'</span>'; }catch(x){} });
@@ -280,7 +280,7 @@ const GAMA_RANGE={Entrada:'< $15k',Media:'$15–30k',Alta:'$30–60k',Premium:'$
 const CHEV='<svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8l5 5 5-5"/></svg>';
 const SEARCH='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="6"/><path d="M14 14l4 4"/></svg>';
 
-const state = { vend:'Todos', tab:'prio', sort:'eff', q:'', bod:'', gama:'', var:'', onlyMine:false, maxRest:0, open:new Set(), others:new Set(), caps:25, allq:'', allsort:'rest', allShowDone:false, cliq:'', db:{ inact:'90', max:'', bod:'', et:'', zona:'', vip:false, sort:'days', caps:50 } };
+const state = { vend:'Todos', tab:'prio', sort:'eff', q:'', bod:'', gama:'', var:'', onlyMine:false, maxRest:0, open:new Set(), others:new Set(), caps:25, allq:'', allsort:'rest', allShowDone:false, cliq:'', db:{ inact:'90', max:'', bod:'', et:'', zona:'', mes:'', vip:false, sort:'days', caps:50 } };
 try{ const s=localStorage.getItem('bono_vend'); if(s) state.vend=s; }catch(e){}
 // ---- registro de contactos: compartido (Airtable vía /api/contacts) con respaldo local
 const CONTACTS_URL='/api/contacts';
@@ -349,7 +349,7 @@ async function syncCRM(){
     D.buyers = D.buyers||{};
     d.sales.forEach(function(s){
       if(!s.cid||!C[s.cid]) return;
-      const c=C[s.cid]; if(s.v&&V.indexOf(s.v)>=0) c.v=s.v; if(!c.v) c.v='Libre'; if(s.d>(c.u||'')) c.u=s.d;
+      const c=C[s.cid]; if(s.v&&V.indexOf(s.v)>=0) c.v=s.v; if(!c.v) c.v='Libre'; if(s.d>(c.u||'')) c.u=s.d; c.m=c.m||[]; if(s.d.slice(0,4)==='2026'&&c.m.indexOf(s.d.slice(0,7))<0) c.m.push(s.d.slice(0,7)); c.k=(c.k||0)+1;
       s.ets.forEach(function(name){ const k=normKey(name); const arr=D.buyers[k]=D.buyers[k]||[]; let b=null; for(const x of arr){ if(x[0]===s.cid){ b=x; break; } } if(!b){ b=[s.cid,0,'',false]; arr.push(b); } b[1]++; if(s.d>b[2]) b[2]=s.d; if(s.d.slice(0,7)===D.ym) b[3]=true; });
     });
     crm={ok:true,at:new Date(),err:null,n:d.sales.length}; invIdx=null;
@@ -381,7 +381,7 @@ function crmHTML(){ const d=D.pulled?fdate(D.pulled):'—'; if(crm.ok) return '<
 function statusHTML(){
   if(live.loading) return '<span class="st"><i class="dot busy"></i>Actualizando…</span>';
   if(live.ok){ const m=Math.round((Date.now()-live.at)/60000); return `<span class="st"><i class="dot ok"></i>En vivo · ${m<1?'recién':'hace '+m+' min'} <button class="lnk" id="refresh">Refrescar</button></span>`; }
-  return `<span class="st" title="${esc(live.err||'')}"><i class="dot off"></i>Datos del 03/11 (sin conexión al Sheet) <button class="lnk" id="refresh">Reintentar</button></span>`;
+  return `<span class="st" title="${esc(live.err||'')}"><i class="dot off"></i>Datos del '+(D.pulled?fdate(D.pulled):'—')+' (sin conexión al Sheet) <button class="lnk" id="refresh">Reintentar</button></span>`;
 }
 function renderStatus(){ const s=document.getElementById('status'); if(!s) return; s.innerHTML=crmHTML()+' &nbsp; '+statusHTML(); const b=s.querySelector('#refresh'); if(b) b.onclick=()=>refreshLive(true); }
 const myLeads = l => state.vend==='Todos' ? l.buyers.filter(b=>!b[3]).length : l.warm[state.vend].length;
@@ -710,19 +710,24 @@ let invIdx = null; // cid -> [[labelKey, n, last], ...]
 function buildInv(){ invIdx={}; Object.keys(D.buyers||{}).forEach(function(k){ (D.buyers[k]||[]).forEach(function(b){ (invIdx[b[0]]=invIdx[b[0]]||[]).push([k,b[1],b[2]]); }); }); Object.keys(invIdx).forEach(function(c){ invIdx[c].sort(function(a,b){ return b[1]-a[1] || (b[2]>a[2]?1:-1); }); }); }
 const labelName = k => (D.names&&D.names[k]) || k;
 const daysSince = d => d ? Math.floor((Date.now()-new Date(d+'T12:00:00').getTime())/864e5) : null;
-const INACT=[['0','Todos'],['30','Más de 30 días'],['60','Más de 60 días'],['90','Más de 90 días'],['120','Más de 120 días'],['150','Más de 150 días'],['180','Más de 180 días'],['200','Más de 200 días']];
+const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const INACT=[['0','Todos'],['never','Nunca compraron'],['30','Más de 30 días'],['60','Más de 60 días'],['90','Más de 90 días'],['120','Más de 120 días'],['150','Más de 150 días'],['180','Más de 180 días'],['200','Más de 200 días']];
 function dbRows(){
   if(!invIdx) buildInv();
   const f=state.db, min=+f.inact||0, max=f.max?+f.max:null;
   const bodSet = f.bod ? {} : null; if(bodSet) Object.keys(D.buyers).forEach(function(k){ const c=CAT[k]; if(c&&c[0]===f.bod) (D.buyers[k]||[]).forEach(function(x){ bodSet[x[0]]=bodSet[x[0]]||x; }); });
   const etKey = f.et ? normKey(f.et) : '';
-  const etSet = etKey ? {} : null; if(etSet) Object.keys(D.buyers).forEach(function(k){ if(k.indexOf(etKey)>=0) (D.buyers[k]||[]).forEach(function(b){ etSet[b[0]]=etSet[b[0]]||b; }); });
+  const etExact = etKey && D.buyers[etKey] ? true : false;
+  const etSet = etKey ? {} : null; if(etSet){ if(etExact) (D.buyers[etKey]||[]).forEach(function(b){ etSet[b[0]]=b; }); else Object.keys(D.buyers).forEach(function(k){ if(k.indexOf(etKey)>=0) (D.buyers[k]||[]).forEach(function(b){ etSet[b[0]]=etSet[b[0]]||b; }); }); }
+  dbRows.etExact = etExact;
   const out=[];
   Object.keys(C).forEach(function(cid){
-    const c=C[cid]; if(!c.u) return;
+    const c=C[cid];
     if(state.vend!=='Todos' && c.v!==state.vend) return;
-    const days=daysSince(c.u); if(days===null) return;
-    if(days<min) return; if(max!==null && days>max) return;
+    const days=daysSince(c.u);
+    if(f.inact==='never'){ if(days!==null) return; }
+    else { if(days===null){ if(min>0||max!==null) return; } else { if(days<min) return; if(max!==null && days>max) return; } }
+    if(f.mes && !((c.m||[]).indexOf(f.mes)>=0)) return;
     if(f.vip && !c.vip) return;
     if(f.zona && !(c.z||[]).some(function(z){ return z===f.zona; })) return;
     if(bodSet && !bodSet[cid]) return;
@@ -730,7 +735,7 @@ function dbRows(){
     out.push({cid:cid,c:c,days:days,bod:bodSet?bodSet[cid]:null,et:etSet?etSet[cid]:null});
   });
   const s=f.sort;
-  out.sort(function(a,b){ return s==='days'?a.days-b.days : s==='daysd'?b.days-a.days : s==='ltv'?(b.c.ltv||0)-(a.c.ltv||0) : s==='k'?(b.c.k||0)-(a.c.k||0) : (a.c.n||'').localeCompare(b.c.n||''); });
+  out.sort(function(a,b){ const da=a.days===null?1e9:a.days, dbb=b.days===null?1e9:b.days; return s==='days'?da-dbb : s==='daysd'?dbb-da : s==='ltv'?(b.c.ltv||0)-(a.c.ltv||0) : s==='k'?(b.c.k||0)-(a.c.k||0) : (a.c.n||'').localeCompare(b.c.n||''); });
   return out;
 }
 function dbCSV(rows){
@@ -746,25 +751,26 @@ function renderDB(){
   const zonas={}; Object.keys(C).forEach(function(cid){ const c=C[cid]; if(state.vend!=='Todos'&&c.v!==state.vend) return; (c.z||[]).forEach(function(z){ zonas[z]=(zonas[z]||0)+1; }); });
   const zlist=Object.keys(zonas).sort(function(a,b){ return zonas[b]-zonas[a]; });
   const bods=[]; Object.keys(CAT).forEach(function(k){ if(bods.indexOf(CAT[k][0])<0) bods.push(CAT[k][0]); }); bods.sort(function(a,b){ return a.localeCompare(b); });
-  const nf=[f.inact!=='0'&&f.inact, f.max, f.bod, f.et, f.zona, f.vip].filter(Boolean).length;
+  const nf=[f.inact!=='0'&&f.inact, f.max, f.bod, f.et, f.zona, f.mes, f.vip].filter(Boolean).length;
   const totalLtv=rows.reduce(function(a,r){ return a+(r.c.ltv||0); },0);
   el.innerHTML=`
-  <p class="note">Clientes ${state.vend==='Todos'?'de todo el equipo':'de '+state.vend} según cuánto hace que no compran, qué compraron y dónde viven. La “última compra” se actualiza sola con las ventas que se cargan en el CRM. Cada fila muestra lo que más le gusta a ese cliente, para tener la excusa de la llamada.</p>
+  <p class="note">Todos los clientes del CRM ${state.vend==='Todos'?'(equipo)':'de '+state.vend}, según cuánto hace que no compran, en qué mes compraron, qué compraron y dónde viven. La “última compra” se actualiza sola con las ventas que se cargan en el CRM. Cada fila muestra lo que más le gusta a ese cliente, para tener la excusa de la llamada.</p>
   <div class="tool">
-    <span class="sel ${f.inact!=='0'?'on':''}"><select id="dbInact" aria-label="Sin comprar hace">${INACT.map(function(x){return '<option value="'+x[0]+'" '+(f.inact===x[0]?'selected':'')+'>'+(x[0]==='0'?'Sin comprar: cualquiera':'Sin comprar '+x[1].toLowerCase())+'</option>';}).join('')}</select></span>
+    <span class="sel ${f.inact!=='0'?'on':''}"><select id="dbInact" aria-label="Sin comprar hace">${INACT.map(function(x){return '<option value="'+x[0]+'" '+(f.inact===x[0]?'selected':'')+'>'+(x[0]==='0'?'Sin comprar: cualquiera':x[0]==='never'?'Nunca compraron':'Sin comprar '+x[1].toLowerCase())+'</option>';}).join('')}</select></span>
     <span class="sel ${f.max?'on':''}"><select id="dbMax" aria-label="Hasta"><option value="">…y hasta: sin tope</option>${['60','90','120','150','180','200','365'].map(function(x){return '<option value="'+x+'" '+(f.max===x?'selected':'')+'>…y hasta '+x+' días</option>';}).join('')}</select></span>
     <span class="sel ${f.bod?'on':''}"><select id="dbBod" aria-label="Bodega"><option value="">Compró de la bodega…</option>${bods.map(function(b){return '<option value="'+esc(b)+'" '+(f.bod===b?'selected':'')+'>'+esc(b)+'</option>';}).join('')}</select></span>
-    <label class="search" style="flex:1 1 200px">${SEARCH}<input id="dbEt" type="text" placeholder="Compró la etiqueta… (ej: Nicasia Malbec)" value="${esc(f.et)}" aria-label="Etiqueta"></label>
+    <span class="sel ${f.mes?'on':''}"><select id="dbMes" aria-label="Compró en el mes"><option value="">Compró en el mes… (2026)</option>${MESES.map(function(m,i){ const ym='2026-'+String(i+1).padStart(2,'0'); return '<option value="'+ym+'" '+(f.mes===ym?'selected':'')+'>'+m+' 2026</option>'; }).join('')}</select></span>
+    <label class="search ${f.et?'on':''}" style="flex:1 1 220px">${SEARCH}<input id="dbEt" list="dbEtList" type="text" placeholder="Compró la etiqueta… (elegí y Enter)" value="${esc(f.et)}" aria-label="Etiqueta"><datalist id="dbEtList">${Object.keys(D.names||{}).sort(function(a,b){return a.localeCompare(b);}).map(function(k){return '<option value="'+esc(D.names[k])+'"></option>';}).join('')}</datalist></label>
     <span class="sel ${f.zona?'on':''}"><select id="dbZona" aria-label="Zona"><option value="">Zona: todas</option>${zlist.map(function(z){return '<option value="'+esc(z)+'" '+(f.zona===z?'selected':'')+'>'+esc(z)+' ('+zonas[z]+')</option>';}).join('')}</select></span>
     <label class="toggle ${f.vip?'on':''}"><input type="checkbox" id="dbVip" ${f.vip?'checked':''}> Sólo VIP</label>
   </div>
   <div class="bar2">
-    <div class="count num"><b>${rows.length}</b> clientes · ${money(totalLtv)} de historial${nf?` · ${nf} filtro${nf>1?'s':''} <button class="btn ghost sm" id="dbClear">Limpiar</button>`:''} <button class="btn sm" id="dbCsv" ${rows.length?'':'disabled'}>⬇ Exportar CSV</button></div>
+    <div class="count num"><b>${rows.length}</b> clientes · ${money(totalLtv)} de historial${f.et?(dbRows.etExact?' · etiqueta exacta':' · etiquetas que contienen “'+esc(f.et)+'”'):''}${nf?` · ${nf} filtro${nf>1?'s':''} <button class="btn ghost sm" id="dbClear">Limpiar</button>`:''} <button class="btn sm" id="dbCsv" ${rows.length?'':'disabled'}>⬇ Exportar CSV</button></div>
     <div class="sortseg" role="group" aria-label="Ordenar por">${[['days','Menos días'],['daysd','Más días'],['ltv','Mayor historial'],['k','Más compras'],['name','A–Z']].map(function(x){return '<button data-s="'+x[0]+'" aria-pressed="'+(f.sort===x[0])+'">'+x[1]+'</button>';}).join('')}</div>
   </div>
   ${rows.length?`<div class="tw"><table><thead><tr><th>Cliente</th><th>Teléfono</th><th>Zona</th><th>Vendedor</th><th class="r">Últ. compra</th><th class="r">Días</th><th class="r">Compras</th><th class="r">Historial</th><th class="r">Botella hab.</th><th>Le gusta</th><th class="r"></th></tr></thead><tbody>
   ${rows.slice(0,f.caps).map(function(r){ const c=r.c; const fav=(invIdx[r.cid]||[]).slice(0,3).map(function(x){return '<span class="chip var" title="'+x[1]+' veces, última '+fdate(x[2])+'">'+esc(labelName(x[0]))+'</span>';}).join(' '); const key=D.mes+'|reactivacion|'+r.cid; const on=!!contacted[key];
-    return '<tr class="'+(on?'ct':'')+'"><td><b>'+esc(c.n||'(sin nombre)')+'</b> '+(c.vip?'<span class="chip vip">VIP</span>':'')+'</td><td class="tel">'+esc(c.t)+'</td><td>'+esc((c.z||[]).join(', ')||'—')+'</td><td><span class="chip '+(VC[c.v]||'libre')+'">'+esc(c.v)+'</span></td><td class="r num">'+fdate(c.u)+'</td><td class="r num"><b>'+r.days+'</b></td><td class="r num">'+(c.k||0)+'</td><td class="r num">'+money(c.ltv||0)+'</td><td class="r num">'+(c.pm?money(c.pm):'—')+'</td><td>'+fav+'</td><td class="r"><button class="btn sm" aria-pressed="'+on+'" data-react="'+r.cid+'">'+(on?'✓ Contactado':'Marcar contactado')+'</button></td></tr>'; }).join('')}
+    return '<tr class="'+(on?'ct':'')+'"><td><b>'+esc(c.n||'(sin nombre)')+'</b> '+(c.vip?'<span class="chip vip">VIP</span>':'')+'</td><td class="tel">'+esc(c.t)+'</td><td>'+esc((c.z||[]).join(', ')||'—')+'</td><td><span class="chip '+(VC[c.v]||'libre')+'">'+esc(c.v)+'</span></td><td class="r num">'+(c.u?fdate(c.u):'nunca')+'</td><td class="r num"><b>'+(r.days===null?'—':r.days)+'</b></td><td class="r num">'+(c.k||0)+'</td><td class="r num">'+money(c.ltv||0)+'</td><td class="r num">'+(c.pm?money(c.pm):'—')+'</td><td>'+fav+'</td><td class="r"><button class="btn sm" aria-pressed="'+on+'" data-react="'+r.cid+'">'+(on?'✓ Contactado':'Marcar contactado')+'</button></td></tr>'; }).join('')}
   </tbody></table></div>
   ${rows.length>f.caps?`<div style="text-align:center;margin-top:12px"><button class="btn" id="dbMore">Mostrar ${Math.min(50,rows.length-f.caps)} más · quedan ${rows.length-f.caps}</button></div>`:''}`
   :`<div class="empty"><b>Ningún cliente con esos filtros</b>Probá con menos días o sacá la bodega/zona.</div>`}`;
@@ -773,9 +779,10 @@ function renderDB(){
   el.querySelector('#dbBod').onchange=function(e){ f.bod=e.target.value; renderDB(); };
   el.querySelector('#dbZona').onchange=function(e){ f.zona=e.target.value; renderDB(); };
   el.querySelector('#dbVip').onchange=function(e){ f.vip=e.target.checked; renderDB(); };
-  const et=el.querySelector('#dbEt'); et.oninput=function(e){ f.et=e.target.value; f.caps=50; renderDB(); const i=el.querySelector('#dbEt'); i.focus(); i.setSelectionRange(i.value.length,i.value.length); };
+  const et=el.querySelector('#dbEt'); et.onchange=function(e){ f.et=e.target.value.trim(); f.caps=50; renderDB(); }; et.onkeydown=function(e){ if(e.key==='Enter'){ e.preventDefault(); f.et=e.target.value.trim(); f.caps=50; renderDB(); } };
+  el.querySelector('#dbMes').onchange=function(e){ f.mes=e.target.value; f.caps=50; renderDB(); };
   el.querySelectorAll('.sortseg button').forEach(function(b){ b.onclick=function(){ f.sort=b.dataset.s; renderDB(); }; });
-  const cl=el.querySelector('#dbClear'); if(cl) cl.onclick=function(){ Object.assign(f,{inact:'0',max:'',bod:'',et:'',zona:'',vip:false,caps:50}); renderDB(); };
+  const cl=el.querySelector('#dbClear'); if(cl) cl.onclick=function(){ Object.assign(f,{inact:'0',max:'',bod:'',et:'',zona:'',mes:'',vip:false,caps:50}); renderDB(); };
   const mo=el.querySelector('#dbMore'); if(mo) mo.onclick=function(){ f.caps+=50; renderDB(); };
   const cs=el.querySelector('#dbCsv'); if(cs) cs.onclick=function(){ try{ const blob=new Blob([dbCSV(rows)],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='clientes_'+(state.vend==='Todos'?'equipo':state.vend)+'_'+(f.inact!=='0'?'mas'+f.inact+'dias':'todos')+'.csv'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500); }catch(e){ alert('No se pudo descargar en este navegador.'); } };
   el.querySelectorAll('button[data-react]').forEach(function(b){ b.onclick=function(){ toggleContact({name:'Reactivación',id:-1},b.dataset.react); }; });
